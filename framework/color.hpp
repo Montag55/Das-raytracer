@@ -21,8 +21,13 @@ struct Color
 
   friend std::ostream& operator<<(std::ostream& os, Color const& c)
   {
-    os << "(" << c.r << "," << c.g << "," << c.b << ")\n";
+    os << "(" << c.r << "," << c.g << "," << c.b << ")";
     return os;
+  }
+
+  friend bool operator==(Color const& lhs, Color const& rhs)
+  {
+   return lhs.r == rhs.r && lhs.g == rhs.g && lhs.b==rhs.b;  
   }
 
   Color& operator+=(Color const& other)
