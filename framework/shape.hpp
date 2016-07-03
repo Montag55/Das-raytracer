@@ -1,25 +1,36 @@
 #ifndef SHAPE_HPP
 #define SHAPE_HPP
-#include "color.hpp"
+#include "material.hpp"
+#include <ostream>
+#include "ray.hpp"
 
-class Shape{
+class Shape
+{
 public:
+	//constr./Destr
 	Shape();
-	Shape(std::string const& name, Color const& color);
+	Shape(std::string const& name, Material const& mtrl);
 	virtual ~Shape();
+
+	//getter
+	Material const& material() const;
+	std::string const& name() const;
+
+	virtual float area() const = 0;
+	virtual float volume() const = 0;
 
 	virtual std::ostream& print(std::ostream& os) const;
 
-	Color color() const;
-	std::string name() const;
-	virtual float area() const = 0;
-	virtual float volume() const = 0;
+	virtual bool intersect(Ray const& ray, float& t) const = 0;
+	
 private:
 	std::string name_;
-	Color color_;
+	Material material_;
 
-};	
+};
 
-std::ostream& operator<<(std::ostream& os, Shape const& s);
+//dingsoperator
+std::ostream& operator <<(std::ostream& os, Shape const& s);
+
 
 #endif

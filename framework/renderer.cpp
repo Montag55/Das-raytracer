@@ -9,8 +9,9 @@
 
 #include "renderer.hpp"
 
-Renderer::Renderer(unsigned w, unsigned h, std::string const& file)
-  : width_(w)
+Renderer::Renderer(Scene const& scene, unsigned w, unsigned h, std::string const& file)
+  : scene_(scene)
+  , width_(w)
   , height_(h)
   , colorbuffer_(w*h, Color(0.0, 0.0, 0.0))
   , filename_(file)
@@ -24,6 +25,8 @@ void Renderer::render()
   for (unsigned y = 0; y < height_; ++y) {
     for (unsigned x = 0; x < width_; ++x) {
       Pixel p(x,y);
+      // Ray ray = scene_.camera.calc_eye_ray(x,y);
+      // p.color = raytrace(ray, 3); // 3 ist die raytrace tiefe
       if ( ((x/checkersize)%2) != ((y/checkersize)%2)) {
         p.color = Color(0.0, 1.0, float(x)/height_);
       } else {

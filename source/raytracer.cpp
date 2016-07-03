@@ -1,5 +1,6 @@
 #include <thread>
 #include <renderer.hpp>
+#include <scene.hpp>
 #include <fensterchen.hpp>
 
 int main(int argc, char* argv[])
@@ -8,7 +9,8 @@ int main(int argc, char* argv[])
   unsigned const height = 600;
   std::string const filename = "./checkerboard.ppm";
 
-  Renderer app(width, height, filename);
+  Scene scene;
+  Renderer app(scene, width, height, filename);
 
   std::thread thr([&app]() { app.render(); });
 

@@ -12,6 +12,7 @@
 
 #include "color.hpp"
 #include "pixel.hpp"
+#include "scene.hpp"
 #include "ppmwriter.hpp"
 #include <string>
 #include <glm/glm.hpp>
@@ -19,7 +20,7 @@
 class Renderer
 {
 public:
-  Renderer(unsigned w, unsigned h, std::string const& file);
+  Renderer(Scene const& scene, unsigned w, unsigned h, std::string const& file);
 
   void render();
   void write(Pixel const& p);
@@ -30,6 +31,7 @@ public:
   }
 
 private:
+  Scene scene_;
   unsigned width_;
   unsigned height_;
   std::vector<Color> colorbuffer_;

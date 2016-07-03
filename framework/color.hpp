@@ -14,6 +14,8 @@
 
 struct Color
 {
+  Color() : r(0), g(0), b(0) {}
+  
   Color(float red, float green, float blue) : r(red), g(green), b(blue) {}
   float r;
   float g;
@@ -27,7 +29,7 @@ struct Color
 
   friend bool operator==(Color const& lhs, Color const& rhs)
   {
-   return lhs.r == rhs.r && lhs.g == rhs.g && lhs.b==rhs.b;  
+    return lhs.r == rhs.r && lhs.g == rhs.g && lhs.b == rhs.b;
   }
 
   Color& operator+=(Color const& other)
