@@ -2,13 +2,14 @@
 #include <renderer.hpp>
 #include <scene.hpp>
 #include <fensterchen.hpp>
+#include "raytracer.hpp"
 
 int main(int argc, char* argv[])
 {
   unsigned const width = 600;
   unsigned const height = 600;
   std::string const filename = "./checkerboard.ppm";
-
+/*
   Scene scene;
   Renderer app(scene, width, height, filename);
 
@@ -28,6 +29,6 @@ int main(int argc, char* argv[])
   }
 
   thr.join();
-
+*/
   return 0;
 }
