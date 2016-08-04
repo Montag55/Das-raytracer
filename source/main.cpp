@@ -4,10 +4,16 @@
 #include <string>
 #include "material.hpp"
 #include <sstream>
+#include "raytracer.hpp"
 
 
-int main() {
-  std::string line;
+int main(int argc, char* argv[]){
+  
+  Raytracer ray1("framework", 1200, 15, "framework");
+  
+
+  ray1.render();
+  /*std::string line;
   std::ifstream myfile ("../../../framework/material.txt");
   if (myfile.is_open())
   {
@@ -42,6 +48,6 @@ int main() {
   }
 
   else std::cout << "Unable to open file"; 
-
+  */
   return 0;
 }
