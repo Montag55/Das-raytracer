@@ -1,11 +1,14 @@
 #ifndef SPHERE_HPP
 #define SPHERE_HPP
 
+#include "hit.hpp"
 #include "shape.hpp"
 #include "material.hpp"
 #include <glm/vec3.hpp>
 #include <glm/glm.hpp>
 #include <glm/gtx/intersect.hpp>
+
+
 
 class Sphere : public Shape
 {
@@ -26,7 +29,7 @@ public:
 
 	 std::ostream& print(std::ostream& os) const override;
 
-	 bool intersect(Ray const& ray, float& t) const override;
+	 Hit intersect(Ray const& ray) const override; //Zu Hit geändert: infos auch über Schnittpunkt, statt Bool.
 
 
 private:

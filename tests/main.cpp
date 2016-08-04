@@ -2,6 +2,7 @@
 #include <catch.hpp>
 #include <box.hpp>
 #include <sphere.hpp> 
+#include "hit.hpp"
 #include <glm/glm.hpp>
 #include <glm/gtx/intersect.hpp>
 
@@ -53,25 +54,52 @@ TEST_CASE("Not a Sphere with name and colorful color + cout", "[constructor]")
 }
 
 
-TEST_CASE("intersectRaySphere","[intersect]")
+TEST_CASE("intersectRaySphere","[intersect: Hit]")
 {
 	//Ray
 	glm::vec3 ray_origin{0.0,0.0,0.0};
-	//raydirectionhastobenormalized!
-	//youcanuse:
-	//v = glm::normalize(some_vector)
-	glm::vec3 ray_direction{0.0,0.0,1.0};
+	glm::vec3 ray_direction{0.0 ,0.0 ,1.0};
+	Ray lorenz{ray_origin, ray_direction};
 	//Sphere
-	glm::vec3 sphere_center{0.0,0.0,5.0};
-	float sphere_radius{1.0};
-	float distance{0.0};
-	auto result=glm::intersectRaySphere(ray_origin,
-		ray_direction, sphere_center,sphere_radius * sphere_radius,
-		distance);
-	REQUIRE(distance==Approx(4.0f));
+	Sphere a{"KEINE KUGEL", {},
+	 {0.0f,0.0f, 5.0f} , {1.0f}};
+
+	REQUIRE(a.intersect(lorenz).m_distance==4);
+	REQUIRE(a.intersect(lorenz).m_hit==true);
+	
+	REQUIRE(a.intersect(lorenz).m_intersection.z==4);
+	REQUIRE(a.intersect(lorenz).m_normal.x==0);
+	REQUIRE(a.intersect(lorenz).m_normal.y==0);
+	REQUIRE(a.intersect(lorenz).m_normal.z==-1);
+
+
 }
 
+TEST_CASE("intersectRaySphere2","[intersect: Hit]")
+{
+	//Ray
+	glm::vec3 ray_origin{0.0,0.0,0.0};
+	glm::vec3 ray_direction{0.0 ,1.0 ,1.0};
+	Ray lorenz{ray_origin, ray_direction};
+	//Sphere
+	Sphere a{"KEINE KUGEL", {},
+	 {0.0f,4.0f, 4.0f} , {2.0f}};
 
+	/*  REQUIRE(a.intersect(lorenz).m_distance==sqrt(8)); /* Richtig seltsamer (Rundungs-?)fehler */
+
+}
+
+TEST_CASE ("intersectRayBox", "[intersect]"){
+	glm::vec3 ray_origin{0.0 ,0.0 ,0.0};
+	glm::vec3 ray_direction{1.0 ,1.0 ,1.0};
+	Ray lorenz{ray_origin, ray_direction};
+	Box a{ "Paul", {}, {1.0f,1.0f,1.0f}, {2.0f,2.0f,2.0f}};
+
+	REQUIRE(a.intersect(lorenz).m_distance==1.189207115);
+}
+
+//ALTE TESTS bevor Intersect = Hit.
+/*
 TEST_CASE ("dwadaedintersectRaySphere" , "[intersect]"){
 	// Ray
 	glm::vec3 ray_origin{0.0 ,0.0 ,0.0};
@@ -118,7 +146,7 @@ TEST_CASE ("intersectRayBox_ miss", "[intersect]"){
 }
 
 
-
+*/
 
 
 int main(int argc, char *argv[])

@@ -5,6 +5,8 @@
 #include <glm/vec3.hpp>
 #include "material.hpp"
 #include "ray.hpp"
+#include "hit.hpp"
+
 
 class Box : public Shape
 {
@@ -24,7 +26,7 @@ public:
 
 	 std::ostream& print(std::ostream& os) const override;
 
-	 bool intersect(Ray const& ray, float& t) const override;
+	 Hit intersect(Ray const& ray) const override;
 
 private:
 	glm::vec3 m_min;

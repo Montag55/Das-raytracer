@@ -3,6 +3,11 @@
 #include "material.hpp"
 #include <ostream>
 #include "ray.hpp"
+#include "hit.hpp"
+
+
+struct Hit; // forward declaration for intersect.
+//NOCHMAL ANSCHAUEN
 
 class Shape
 {
@@ -21,7 +26,7 @@ public:
 
 	virtual std::ostream& print(std::ostream& os) const;
 
-	virtual bool intersect(Ray const& ray, float& t) const = 0;
+	virtual Hit intersect(Ray const& ray) const = 0;
 	
 private:
 	std::string name_;

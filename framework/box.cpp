@@ -46,8 +46,11 @@ float Box::area() const
 	return 2*(diff.y*diff.z + diff.x*diff.z + diff.x*diff.y); 
 }
 
-bool Box::intersect(Ray const& ray, float& t) const
+Hit Box::intersect(Ray const& ray) const
 {
+
+    Hit boxhit;
+
 	float tmin = (m_min.x - ray.origin.x) / ray.direction.x; 
     float tmax = (m_max.x - ray.origin.x) / ray.direction.x; 
  
@@ -59,7 +62,7 @@ bool Box::intersect(Ray const& ray, float& t) const
     if (tymin > tymax) std::swap(tymin, tymax); 
  
     if ((tmin > tymax) || (tymin > tmax)) 
-        return false; 
+        boxhit.m_hit = false; 
  
     if (tymin > tmin) 
         tmin = tymin; 
@@ -73,7 +76,7 @@ bool Box::intersect(Ray const& ray, float& t) const
     if (tzmin > tzmax) std::swap(tzmin, tzmax); 
  
     if ((tmin > tzmax) || (tzmin > tmax)) 
-        return false; 
+        boxhit.m_hit = false; 
  
     if (tzmin > tmin) 
         tmin = tzmin; 
@@ -81,8 +84,40 @@ bool Box::intersect(Ray const& ray, float& t) const
     if (tzmax < tmax) 
         tmax = tzmax; 
  
-    return true; 
+    boxhit.m_hit = true;
+
+
+    if (boxhit.m_hit)
+    {
+        boxhit.m_distance = sqrt(tmin*tmin*(          //min Abstand²
+                (ray.direction.x-ray.origin.x)*(ray.direction.x-ray.origin.x) +
+                 (ray.direction.y-ray.origin.y)*(ray.direction.y-ray.origin.y) +
+                (ray.direction.z-ray.origin.z)*(ray.direction.z-ray.origin.z)));
+
+        boxhit.m_shape = std::make_shared<Box> (*this);
+    }
+
+    
+
+
+
+    /*
+    if (tmax > std::max(0.0, tmin)) {
+        boxhit.m_distance = 
+        );
+
+        boxhit.m_intersection = glm::vec3{
+            tmin*ray.m_dir.x, tmin*ray.m_dir.y, tmin*ray.m_dir.z
+            };
+        boxhit.m_normal = normal(boxhit.m_intersection);
+        boxhit.m_shape = std::make_shared<Box>(*this);
+        boxhit.m_hit = true;
+    }
+    */
+
+    return boxhit;
 }
+
 
 std::ostream& Box::print(std::ostream& os) const
 {

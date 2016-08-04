@@ -1,6 +1,7 @@
 #include "sphere.hpp"
 #include <glm/vec3.hpp>
 #include <cmath>
+#include "hit.hpp"
 #define _USE_MATH_DEFINES
 
 
@@ -47,10 +48,20 @@ float Sphere::area() const
 		return 4.0f* M_PI * m_radius * m_radius;
 	}
 
-bool Sphere::intersect(Ray const& ray, float& t) const
+Hit Sphere::intersect(Ray const& ray) const
 	{
-		return glm::intersectRaySphere(ray.origin, ray.direction,
-			m_center, m_radius*m_radius, t);
+		Hit spherehit;
+
+		spherehit.m_hit = glm::intersectRaySphere(ray.origin, ray.direction,
+			m_center, m_radius, spherehit.m_intersection, spherehit.m_normal);
+
+		if (spherehit.m_hit)
+		{
+			spherehit.m_distance = glm::distance(ray.origin, spherehit.m_intersection);
+			spherehit.m_shape = std::make_shared<Sphere> (*this);
+		}
+			
+		return spherehit;
 	}
 
 

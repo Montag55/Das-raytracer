@@ -3,10 +3,10 @@
 #include <fstream>
 #include <string>
 #include "material.hpp"
- #include <sstream>
+#include <sstream>
 
 
-int main () {
+int main() {
   std::string line;
   std::ifstream myfile ("../../../framework/material.txt");
   if (myfile.is_open())
