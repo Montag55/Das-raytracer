@@ -21,8 +21,21 @@ Box::Box(glm::vec3 const& min, glm::vec3 const& max) :
 Box::Box(std::string const& name, Material const& mtrl, glm::vec3 const& min, glm::vec3 const& max )
     : Shape{name, mtrl},
     m_min{min},
+    m_max{max}
+    {} 
+
+Box::Box(std::string const& name, Material* const& mtrl, glm::vec3 const& min, glm::vec3 const& max )
+    : Shape{name, mtrl},
+    m_min{min},
 	m_max{max}
-	{}
+	{} 
+/*
+Box::Box(std::string const& name, Material* const& material, glm::vec3 const& min, glm::vec3 const& max )
+    : Shape{name, material},
+    m_min{min},
+    m_max{max}
+    {}
+*/
 
 //getter
 glm::vec3 const& Box::min() const 
@@ -31,6 +44,9 @@ glm::vec3 const& Box::min() const
 glm::vec3 const& Box::max() const 
 	{return m_max;}
 
+Material* const& Box::material() const{
+    return m_material;
+}
 
 //functions
 float Box::volume() const

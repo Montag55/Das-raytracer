@@ -58,14 +58,14 @@
     /how-do-i-find-files-with-a-specific-extension
     -in-a-directory-that-is-provided-by
     ######################################*/
-    
-    DIR *dir = opendir(m_in.c_str());         //In Input-path, erstellt String mit Ordner Pfad
-    dirent *entry;                            // 
+    std::cout <<"Deine mutter rotzt in der gegnd umher";
+    DIR *dir = opendir(m_in.c_str());         //In Input-path
+    dirent *entry;                            
     unsigned int count=1;
 
     while((entry = readdir(dir))!=nullptr)    //durch alle files
     {
-
+        
        if(has_suffix(entry->d_name, ".txt"))  // ".txt"?
         { //Ablauf für eine SDF-Datei:
           std::cout << "<Datei: " << count << std::endl; 
@@ -102,7 +102,7 @@
         }
     }
 
-    closedir(dir);
+   //closedir(dir);
 
 
   }

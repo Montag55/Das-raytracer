@@ -15,6 +15,7 @@ public:
 	//constr./Destr
 	Shape();
 	Shape(std::string const& name, Material const& mtrl);
+	Shape(std::string const& name, Material* const& mtrl);
 	virtual ~Shape();
 
 	//getter

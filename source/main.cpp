@@ -12,7 +12,7 @@
 
 int main(int argc, char* argv[]){
   
-  Raytracer ray1("framework", 1200, 15, "framework");
+  Raytracer ray1("./input", 1200, 800, "framework");
   
 
   ray1.render();

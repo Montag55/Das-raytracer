@@ -6,9 +6,14 @@ Shape::Shape():
     material_{} {}
     //{std::cout<< "Shape constructed" << "\n";}
 
-Shape::Shape(std::string const& name, Material const& clr):
+Shape::Shape(std::string const& name, Material const& mtrl):
     name_{name},
-    material_{clr}{} 
+    material_{mtrl}{} 
+    //{std::cout<< "Shape constructed" << "\n";}
+
+  Shape::Shape(std::string const& name, Material* const& mtrl):
+    name_{name},
+    material_{*mtrl}{} 
     //{std::cout<< "Shape constructed" << "\n";}
 
 Shape::~Shape(){}

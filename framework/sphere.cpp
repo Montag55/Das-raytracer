@@ -30,6 +30,13 @@ Sphere::Sphere(std::string const& name, Material const& mtrl, glm::vec3 const& c
 	m_radius{r}{}
 	//{std::cout<< "Sphere constructed" << "\n";}
 
+
+Sphere::Sphere(std::string const& name, Material* const& mtrl, glm::vec3 const& ctr, float r):
+	Shape{name, mtrl},
+	m_center{ctr},
+	m_radius{r}{}
+	//{std::cout<< "Sphere constructed" << "\n";}
+
 Sphere::~Sphere(){
 	//{std::cout<< "Sphere destructed" << "\n";}
 }

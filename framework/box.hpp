@@ -15,10 +15,12 @@ public:
 	 Box();
 	 Box(std::string const& name, Material const& mtrl, glm::vec3 const& min, glm::vec3 const& max );
 	 Box(glm::vec3 const& min, glm::vec3 const& max);
+	 Box(std::string const& name, Material* const& material, glm::vec3 const& min, glm::vec3 const& max );
 
 	 //getter
 	 glm::vec3 const& min() const;
 	 glm::vec3 const& max() const;
+	 Material* const& material() const;
 
 	 //functions
 	 float volume() const override;
@@ -31,6 +33,7 @@ public:
 private:
 	glm::vec3 m_min;
 	glm::vec3 m_max;
+	Material* m_material;
 };
 
 

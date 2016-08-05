@@ -8,8 +8,8 @@
 Scene SDFLoader::load(std::string const& inpath){
   	Scene scene;
   	std::string line;
-  	//std::ifstream myfile(inpath);
-  	/*
+  	std::ifstream myfile(inpath);
+
 	if (myfile.is_open())
     { 
 		while (getline(myfile,line))
@@ -39,16 +39,40 @@ Scene SDFLoader::load(std::string const& inpath){
 					ss >> mat.ks.b;
 
 					ss >> mat.m;
-					scene.materials.insert(mat);
+
+					scene.materials.insert(std::pair<std::string, Material*>(mat.name, &mat));
 	     		}
 	     		else if(firstWord == "shape")
 	     		{
 	     			ss>>firstWord;
 
 	     			if(firstWord == "box")
-	     			{
+	     			{	
+	     				std::string boxname;
+						glm::vec3 min;
+						glm::vec3 max;
+						std::string materialname;
+
+
+	     				ss >> boxname;
+	     				ss >> min.x;
+	     				ss >> min.y;
+	     				ss >> min.z;
+
+						ss >> max.x;
+	     				ss >> max.y;
+	     				ss >> max.z;
+
+	     				ss >> materialname;
+
+	     				Material* material = (scene.materials.find(materialname)->second);
+
+
+	     				Box box(boxname, material, min, max);
+
+	     				/*
 	     				Box box;
-	     				ss >> box.name;
+	     				ss >> box.name_;
 
       					ss >> box.m_min.x;
 						ss >> box.m_min.y;
@@ -58,14 +82,34 @@ Scene SDFLoader::load(std::string const& inpath){
 						ss >> box.m_max.y;
 						ss >> box.m_max.z;
 
-						ss >> box.ks.r;
+						ss >> box.material_;
+						*/
 						
-						scene.shapes.push_back(box);
+						scene.shapes.push_back(&box);
 	     			}
+	     			
 	     			else if(firstWord == "sphere")
-	     			{
-	     				Sphere sphere;
-	     				ss >> sphere.name;
+	     			{	
+	     				std::string spherename;
+	     				glm::vec3 center;
+	     				float radius;
+	     				std::string materialname;
+	     				
+
+	     				ss >> spherename;
+
+	     				ss >> center.x;
+	     				ss >> center.y;
+	     				ss >> center.z;
+
+	     				ss >> radius;
+	     				ss >> materialname;
+
+	     				Material* material = (scene.materials.find(materialname)->second);
+
+	     				Sphere sphere(spherename, material, center, radius);
+						/*
+	     				ss >> sphere.name_;
 
       					ss >> sphere.m_center.x;
 						ss >> sphere.m_center.y;
@@ -73,10 +117,12 @@ Scene SDFLoader::load(std::string const& inpath){
 
 						ss >> sphere.m_radius;
 
-						ss >> sphere.material;
+						ss >> sphere.material_;
+						*/
 						
-						scene.shapes.push_back(sphere);
+						scene.shapes.push_back(&sphere);
 	     			}
+	     			
 	     		}
 	     	}
     	}
@@ -84,7 +130,8 @@ Scene SDFLoader::load(std::string const& inpath){
   }
 
   else std::cout << "Unable to open file"; 
+
  
-*/
+
   return scene;
 }

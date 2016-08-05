@@ -16,7 +16,8 @@ public:
 	//constructors
 	 Sphere();
 	 Sphere(glm::vec3 const& ctr, float r);
-	 Sphere(std::string const& name, Material const& mtrl, glm::vec3 const& ctr, float r);
+	 Sphere(std::string const& name, Material const& mtrl, glm::vec3 const& ctr, float r); 
+	 Sphere(std::string const& name, Material* const& material, glm::vec3 const& ctr, float r);
 
 	 ~Sphere();
 	 //getter
