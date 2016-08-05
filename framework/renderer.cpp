@@ -10,6 +10,7 @@ Setzt Renderer Custom mit gewünschter
 Szene, Resolution und Output auf. 
 Nun kann gerendert werden */
 Renderer::Renderer(Scene const& scene, unsigned int width, unsigned int height, std::string const& ofile): 
+  m_scene(scene),
   m_width(width), 
   m_height(height), 
   m_colorbuffer(width*height, Color(0.0, 0.0, 0.0)), 
