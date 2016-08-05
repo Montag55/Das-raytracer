@@ -7,7 +7,7 @@
 // PpmWriter
 // -----------------------------------------------------------------------------
 
-#include "ppmwriter.hpp"
+#include "ppmwriter(original).hpp"
 
 // header, system
 #include <iostream>
@@ -15,7 +15,7 @@
 #include <cmath>
 #include <algorithm>
 
-PpmWriter::PpmWriter(std::string const& file, std::size_t w, std::size_t h)
+PpmWriter::PpmWriter(std::size_t w, std::size_t h, std::string const& file)
   : file_(file),
     width_(w),
     height_(h) {

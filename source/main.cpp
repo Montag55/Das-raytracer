@@ -5,6 +5,9 @@
 #include "material.hpp"
 #include <sstream>
 #include "raytracer.hpp"
+#include "renderer.hpp"
+
+
 
 
 int main(int argc, char* argv[]){

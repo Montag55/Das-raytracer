@@ -86,7 +86,6 @@ TEST_CASE("intersectRaySphere2","[intersect: Hit]")
 	 {0.0f,4.0f, 4.0f} , {2.0f}};
 
 	REQUIRE(a.intersect(lorenz).m_distance==Approx(sqrt(8))); 
-
 }
 
 TEST_CASE ("intersectRayBox", "[intersect]"){
@@ -95,8 +94,8 @@ TEST_CASE ("intersectRayBox", "[intersect]"){
 	Ray lorenz{ray_origin, ray_direction};
 	Box a{ "Paul", {}, {1.0f,1.0f,1.0f}, {2.0f,2.0f,2.0f}};
 
-	REQUIRE(a.intersect(lorenz).m_distance==Approx(1.7320508076));
-}
+	REQUIRE(a.intersect(lorenz).m_distance==Approx(1.732050808));
+	}
 
 //ALTE TESTS bevor Intersect = Hit.
 /*

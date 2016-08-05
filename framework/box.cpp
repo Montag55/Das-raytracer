@@ -51,10 +51,12 @@ Hit Box::intersect(Ray const& ray) const
 
     Hit boxhit;
 
-	float tmin = (m_min.x - ray.origin.x) / ray.direction.x; 
-    float tmax = (m_max.x - ray.origin.x) / ray.direction.x; 
+	float txmin = (m_min.x - ray.origin.x) / ray.direction.x; 
+    float txmax = (m_max.x - ray.origin.x) / ray.direction.x; 
  
-    if (tmin > tmax) std::swap(tmin, tmax); 
+    if (txmin > txmax) std::swap(txmin, txmax); 
+    float tmin = txmin;
+    float tmax = txmax;
  
     float tymin = (m_min.y - ray.origin.y) / ray.direction.y; 
     float tymax = (m_max.y - ray.origin.y) / ray.direction.y; 
@@ -89,10 +91,10 @@ Hit Box::intersect(Ray const& ray) const
 
     if (boxhit.m_hit)
     {
-        boxhit.m_distance = sqrt(tmin*tmin*(          //min Abstand²
-                (ray.direction.x-ray.origin.x)*(ray.direction.x-ray.origin.x) +
-                 (ray.direction.y-ray.origin.y)*(ray.direction.y-ray.origin.y) +
-                (ray.direction.z-ray.origin.z)*(ray.direction.z-ray.origin.z)));
+        boxhit.m_distance = sqrt((txmin-ray.origin.x)*(txmin-ray.origin.x)+
+                                (tymin-ray.origin.y)*(tymin-ray.origin.y)+
+                                (tzmin-ray.origin.z)*(tzmin-ray.origin.z)
+                                );
 
         boxhit.m_shape = std::make_shared<Box> (*this);
     }

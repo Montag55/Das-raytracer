@@ -1,5 +1,0 @@
-/home/lo/Dropbox/2. Semester/Programmiersprachen/Das-raytracer/framework/source/CMakeFiles/raytracer.dir
-/home/lo/Dropbox/2. Semester/Programmiersprachen/Das-raytracer/framework/source/CMakeFiles/example.dir
-/home/lo/Dropbox/2. Semester/Programmiersprachen/Das-raytracer/framework/tests/CMakeFiles/tests.dir
-/home/lo/Dropbox/2. Semester/Programmiersprachen/Das-raytracer/framework/framework/CMakeFiles/framework.dir
-/home/lo/Dropbox/2. Semester/Programmiersprachen/Das-raytracer/framework/external/glfw-3.0.3/src/CMakeFiles/glfw.dir
