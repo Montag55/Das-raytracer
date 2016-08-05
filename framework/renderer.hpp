@@ -26,6 +26,7 @@ public:
   }
 
 private:
+  Scene m_scene;
   unsigned int m_width;
   unsigned int m_height;
   std::vector<Color> m_colorbuffer;

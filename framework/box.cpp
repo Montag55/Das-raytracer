@@ -99,6 +99,8 @@ Hit Box::intersect(Ray const& ray) const
         boxhit.m_shape = std::make_shared<Box> (*this);
     }
 
+    //nur zum pushen hinzugefügt
+
     
 
 
