@@ -22,6 +22,7 @@ Renderer::Renderer(Scene const& scene, unsigned int width, unsigned int height, 
 
 void Renderer::render()
 { 
+
     int distance = 1;
     int width = (-m_width/2);
     int height = (-m_height/2); 

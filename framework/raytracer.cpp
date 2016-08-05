@@ -1,6 +1,6 @@
 #include "raytracer.hpp"
 #include "renderer.hpp"
-
+#include "scene.hpp"
 #include <thread>
 #include <string>
 #include <iostream>
@@ -38,7 +38,7 @@ void Raytracer::render(){
 !   andere Lösung... später!
     ######################################*/
 
-    std::string file="file.txt"; //path->file[1]
+    std::string file="../input/test.txt"; //path->file[1]
     bool done = false;
     while (!done)  //durch n files
     {
