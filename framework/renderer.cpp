@@ -1,56 +1,57 @@
-// -----------------------------------------------------------------------------
-// Copyright  : (C) 2014 Andreas-C. Bernstein
-// License    : MIT (see the file LICENSE)
-// Maintainer : Andreas-C. Bernstein <andreas.bernstein@uni-weimar.de>
-// Stability  : experimental
-//
-// Renderer
-// -----------------------------------------------------------------------------
-
+// renderer.cpp 
+// Thorbe GREAT
 #include "renderer.hpp"
 
-Renderer::Renderer(Scene const& scene, unsigned w, unsigned h, std::string const& file)
-  : scene_(scene)
-  , width_(w)
-  , height_(h)
-  , colorbuffer_(w*h, Color(0.0, 0.0, 0.0))
-  , filename_(file)
-  , ppm_(width_, height_)
-{}
+//Default
+  
+ /*Custom 1 
+######################################
+Setzt Renderer Custom mit gewünschter
+Szene, Resolution und Output auf. 
+Nun kann gerendert werden */
+Renderer::Renderer(Scene const& scene, unsigned int width, unsigned int height, std::string const& ofile): 
+  m_width(width), 
+  m_height(height), 
+  m_colorbuffer(width*height, Color(0.0, 0.0, 0.0)), 
+  m_outfile(ofile),
+  m_ppm(ofile ,m_width, m_height)
+  {}
 
 void Renderer::render()
-{
+{ 
   const std::size_t checkersize = 20;
-
-  for (unsigned y = 0; y < height_; ++y) {
-    for (unsigned x = 0; x < width_; ++x) {
+  
+  for (unsigned int y = 0; y < m_height; ++y) {
+    for (unsigned int x = 0; x < m_width; ++x) {
       Pixel p(x,y);
-      // Ray ray = scene_.camera.calc_eye_ray(x,y);
-      // p.color = raytrace(ray, 3); // 3 ist die raytrace tiefe
-      if ( ((x/checkersize)%2) != ((y/checkersize)%2)) {
-        p.color = Color(0.0, 1.0, float(x)/height_);
-      } else {
-        p.color = Color(1.0, 0.0, float(y)/width_);
-      }
+      //if ( ((x/checkersize)%2) != ((y/checkersize)%2)) {
+        p.color = Color(0.0, 1.0, 0.0);
+      //} else {
+      //  p.color = Color(1.0, 0.0, 1.0);
+      //}
 
       write(p);
     }
   }
-  ppm_.save(filename_);
+
+  m_ppm.save(m_outfile);
+  
 }
 
 void Renderer::write(Pixel const& p)
 {
+  /*
   // flip pixels, because of opengl glDrawPixels
   size_t buf_pos = (width_*p.y + p.x);
-  if (buf_pos >= colorbuffer_.size() || (int)buf_pos < 0) {
+  if (buf_pos >= m_colorbuffer.size() || (int)buf_pos < 0) {
     std::cerr << "Fatal Error Renderer::write(Pixel p) : "
       << "pixel out of ppm_ : "
       << (int)p.x << "," << (int)p.y
       << std::endl;
   } else {
-    colorbuffer_[buf_pos] = p.color;
+    m_colorbuffer[buf_pos] = p.color;
   }
 
-  ppm_.write(p);
+  m_ppm.write(p);
+  */
 }

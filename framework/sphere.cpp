@@ -1,4 +1,6 @@
 #include "sphere.hpp"
+#include <catch.hpp>
+#include <iostream>
 #include <glm/vec3.hpp>
 #include <cmath>
 #include "hit.hpp"
@@ -11,22 +13,22 @@ Sphere::Sphere():
 	Shape{},
     m_center{0.0},
     m_radius{1.0f}
-        {std::cout<< "Sphere constructed" << "\n";}
+        {}
 
 Sphere::Sphere(glm::vec3 const& ctr, float r):
 	Shape{},
 	m_center{ctr},
 	m_radius{r}
-	    {std::cout<< "Sphere constructed" << "\n";}
+	    {}
 
 Sphere::Sphere(std::string const& name, Material const& mtrl, glm::vec3 const& ctr, float r):
 	Shape{name, mtrl},
 	m_center{ctr},
 	m_radius{r}
-	{std::cout<< "Sphere constructed" << "\n";}
+	{}
 
 Sphere::~Sphere()
-	{std::cout<< "Sphere destructed" << "\n";}
+	{}
 
 
 //getter
@@ -55,6 +57,8 @@ Hit Sphere::intersect(Ray const& ray) const
 		spherehit.m_hit = glm::intersectRaySphere(ray.origin, ray.direction,
 			m_center, m_radius, spherehit.m_intersection, spherehit.m_normal);
 
+		std::cout<< "Spherehit at: " <<spherehit.m_intersection.x  << ", "
+	   << spherehit.m_intersection.y  << ", "<< spherehit.m_intersection.z << "\n";
 		if (spherehit.m_hit)
 		{
 			spherehit.m_distance = glm::distance(ray.origin, spherehit.m_intersection);

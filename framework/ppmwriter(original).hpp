@@ -20,7 +20,7 @@
 class PpmWriter
 {
 public:
-  PpmWriter(std::string const& file, std::size_t w, std::size_t h);
+  PpmWriter(std::size_t w, std::size_t h, std::string const& file);
   PpmWriter(std::size_t w, std::size_t h);
 
 public:
