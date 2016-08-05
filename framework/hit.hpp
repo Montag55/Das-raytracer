@@ -15,6 +15,7 @@ struct Hit
         glm::vec3 const& normal, std::shared_ptr<Shape> shape);
 
 	//Copyconstructor fehlt noch
+	//unsigned distence? nicht verkacken bitte
 
 
     bool m_hit;

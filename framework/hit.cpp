@@ -1,5 +1,4 @@
 #include "hit.hpp"
-
 #include <cmath> // INFINITY
 
 

@@ -3,16 +3,16 @@
 
 Shape::Shape():
     name_{"default"},
-    material_{} 
-    {std::cout<< "Shape constructed" << "\n";}
+    material_{} {}
+    //{std::cout<< "Shape constructed" << "\n";}
 
 Shape::Shape(std::string const& name, Material const& clr):
     name_{name},
-    material_{clr} 
-    {std::cout<< "Shape constructed" << "\n";}
+    material_{clr}{} 
+    //{std::cout<< "Shape constructed" << "\n";}
 
-Shape::~Shape()
-{std::cout<< "Shape destructed" << "\n";}
+Shape::~Shape(){}
+//{std::cout<< "Shape destructed" << "\n";}
 
 
 std::ostream& Shape::print(std::ostream& os) const
