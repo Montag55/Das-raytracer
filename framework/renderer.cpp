@@ -32,7 +32,7 @@ void Renderer::render()
     for (unsigned x = 0; x < m_width; ++x) {
       Pixel p(x,y);
       Ray rayman {{0,0,0},{width, height, distance}};
-      p.color=givacolor(rayman);
+      p.color=givacolor(rayman, m_scene);
       write(p);
       width+=(1/m_width);
     }
@@ -65,15 +65,16 @@ void Renderer::write(Pixel const& p)
 Color Renderer::givacolor(Ray const& ray, Scene const& scene){
   for ( auto &i : scene.shapes ){
   //for(int i = scene.shapes->begin() ; i != scene.shapes->end() ; ++i)
-  //{ 
+  //{
+    Hit temphit = i->intersect(ray);
     double min = INFINITY;
-    if(i.intersect(rayman).m_hit){
-      double tempdist =  i.m_distance;
+    if(temphit.m_hit){
+      double tempdist =  temphit.m_distance;
       if(min > tempdist){
         min = tempdist;
       }
     }
-    return i.material().ka;
+    return temphit.m_shape->material().ka;
   }   
 }    
 

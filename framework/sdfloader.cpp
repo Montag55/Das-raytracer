@@ -1,15 +1,15 @@
 #include <string>
 #include "scene.hpp"
 #include "sdfloader.hpp"
-
-
+#include <fstream>
+#include <sstream>
 
 
 Scene SDFLoader::load(std::string const& inpath){
   	Scene scene;
   	std::string line;
-  	std::ifstream myfile(inpath);
-
+  	//std::ifstream myfile(inpath);
+  	/*
 	if (myfile.is_open())
     { 
 		while (getline(myfile,line))
@@ -85,6 +85,6 @@ Scene SDFLoader::load(std::string const& inpath){
 
   else std::cout << "Unable to open file"; 
  
-
+*/
   return scene;
 }
