@@ -44,9 +44,7 @@ glm::vec3 const& Box::min() const
 glm::vec3 const& Box::max() const 
 	{return m_max;}
 
-Material* const& Box::material() const{
-    return m_material;
-}
+
 
 //functions
 float Box::volume() const

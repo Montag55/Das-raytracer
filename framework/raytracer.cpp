@@ -58,7 +58,7 @@
     /how-do-i-find-files-with-a-specific-extension
     -in-a-directory-that-is-provided-by
     ######################################*/
-    std::cout <<"Deine mutter rotzt in der gegnd umher";
+    std::cout <<"Deine mutter rotzt in der gegnd umher" <<"\n";
     DIR *dir = opendir(m_in.c_str());         //In Input-path
     dirent *entry;                            
     unsigned int count=1;

@@ -20,7 +20,6 @@ public:
 	 //getter
 	 glm::vec3 const& min() const;
 	 glm::vec3 const& max() const;
-	 Material* const& material() const;
 
 	 //functions
 	 float volume() const override;
@@ -33,7 +32,6 @@ public:
 private:
 	glm::vec3 m_min;
 	glm::vec3 m_max;
-	Material* m_material;
 };
 
 

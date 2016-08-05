@@ -9,22 +9,28 @@ Scene SDFLoader::load(std::string const& inpath){
   	Scene scene;
   	std::string line;
   	std::ifstream myfile(inpath);
+  	    std::cout <<"Deine mutter rotzt in der gegnd umher Vol.2" <<"\n";
+
 
 	if (myfile.is_open())
-    { 
+    { 	std::cout <<"Deine mutter rotzt in der gegnd umher Vol.3" <<"\n";
 		while (getline(myfile,line))
-    	{
+    	{	
+    		std::cout <<"Deine mutter rotzt in der gegnd umher Vol.i" <<"\n";
 	     	std::stringstream ss;
 	     	ss<<line;					//erste Zeile im Stream
 	     	std::string firstWord;
 	     	ss>>firstWord;
 	     	if (firstWord=="define")
-	     	{
+	     	{	
+	     		std::cout << "Definiere: ";
 	     		ss>>firstWord;
 	     		if(firstWord == "material")
-	     		{
+	     		{	
+	     			std::cout << "Material: ";
 	     			Material mat;
 	     			ss >> mat.name;
+	     			std::cout << mat.name << "  ";
 
       				ss >> mat.ka.r;
 					ss >> mat.ka.g;
@@ -41,13 +47,15 @@ Scene SDFLoader::load(std::string const& inpath){
 					ss >> mat.m;
 
 					scene.materials.insert(std::pair<std::string, Material*>(mat.name, &mat));
-	     		}
+	     		}     		
 	     		else if(firstWord == "shape")
 	     		{
 	     			ss>>firstWord;
+	     			std::cout << "Shape: ";
 
 	     			if(firstWord == "box")
 	     			{	
+	     				std::cout << "Box: ";
 	     				std::string boxname;
 						glm::vec3 min;
 						glm::vec3 max;
@@ -65,10 +73,13 @@ Scene SDFLoader::load(std::string const& inpath){
 
 	     				ss >> materialname;
 
-	     				Material* material = (scene.materials.find(materialname)->second);
+	     				Material* material = new Material;
+	     				material = (scene.materials.find(materialname)->second);
+	     				std::cout << "Box2: ";
 
-
-	     				Box box(boxname, material, min, max);
+	     				Box* box = new Box;
+	     				box(boxname, material, min, max);
+	     				std::cout << "Box3: ";
 
 	     				/*
 	     				Box box;
@@ -127,6 +138,7 @@ Scene SDFLoader::load(std::string const& inpath){
 	     	}
     	}
     myfile.close();
+    std::cout <<"Deine mutter rotzt in der gegnd umher Vol.ii" <<"\n";
   }
 
   else std::cout << "Unable to open file"; 

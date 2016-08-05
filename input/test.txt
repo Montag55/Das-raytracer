@@ -1,4 +1,4 @@
 define material red 1 0 0 1 0 0 1 0 0 1
 define material blue 0 0 1 0 0 1 0 0 1 1
-define shape box rbottom 100 80 200 200 900 900 red
-define shape sphere bsphere 00 100 50 blue
+define shape box rbottom 0 0 100 100 200 200 red
+define shape sphere bsphere 0 0 20 5 blue
