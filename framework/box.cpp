@@ -64,6 +64,37 @@ Hit Box::intersect(Ray const& ray) const
 {
 
     Hit boxhit;
+    
+    double t1 = (m_min.x - ray.origin.x)*ray.inv_direction.x;
+    double t2 = (m_max.x - ray.origin.x)*ray.inv_direction.x;
+    double tmin = std::min(t1, t2);
+    double tmax = std::max(t1, t2);
+
+    t1 = (m_min.y - ray.origin.y)*ray.inv_direction.y;
+    t2 = (m_max.y - ray.origin.y)*ray.inv_direction.y;
+    tmin = std::max(tmin, std::min(t1, t2));
+    tmax = std::min(tmax, std::max(t1, t2));
+
+    t1 = (m_min.z - ray.origin.z)*ray.inv_direction.z;
+    t2 = (m_max.z - ray.origin.z)*ray.inv_direction.z;
+    tmin = std::max(tmin, std::min(t1, t2));
+    tmax = std::min(tmax, std::max(t1, t2));
+
+
+
+    if (tmax > std::max(0.0, tmin))
+    {   
+        boxhit.m_hit = true;
+        boxhit.m_distance = sqrt(tmin*tmin*(
+                                ray.direction.x*ray.direction.x +
+                                ray.direction.y*ray.direction.y +
+                                ray.direction.z*ray.direction.z));
+
+        boxhit.m_shape = std::make_shared<Box> (*this);
+        boxhit.m_intersection = glm::vec3{tmin*ray.direction.x, tmin*ray.direction.y, tmin*ray.direction.z};
+    }
+
+    /* Alte!
 
 	float txmin = (m_min.x - ray.origin.x) / ray.direction.x; 
     float txmax = (m_max.x - ray.origin.x) / ray.direction.x; 
@@ -101,8 +132,8 @@ Hit Box::intersect(Ray const& ray) const
         tmax = tzmax; 
  
     boxhit.m_hit = true;
-
-
+   
+    
     if (boxhit.m_hit)
     {
         boxhit.m_distance = sqrt((txmin-ray.origin.x)*(txmin-ray.origin.x)+
@@ -111,9 +142,11 @@ Hit Box::intersect(Ray const& ray) const
                                 );
 
         boxhit.m_shape = std::make_shared<Box> (*this);
+        boxhit.m_intersection = glm::vec3{tmin*ray.m_dir.x, tmin*ray.m_dir.y, tmin*ray.m_dir.z};
     }
 
     //nur zum pushen hinzugefügt
+    */
 
     
 
