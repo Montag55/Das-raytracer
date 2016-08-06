@@ -11,6 +11,22 @@ Scene SDFLoader::load(std::string const& inpath){
   	std::ifstream myfile(inpath);
   	    std::cout <<"Deine mutter rotzt in der gegnd umher Vol.2" <<"\n";
 
+  	/* TESTCODE:
+    std::string name="rabenblau";
+    Material mat(std::string("rabenblau"),Color(1.0,0.0,0.0),Color(1.0,0.0,0.0),Color(1.0,0.0,0.0), 1.2f);
+
+    std::string name1="row";
+    Material mat1(std::string("row"),Color(1.0,1.0,0.0),Color(1.0,0.0,0.0),Color(1.0,0.0,0.0), 1.2f);
+    
+
+    Shape* b1 = new Sphere(name, mat,glm::vec3(0,0,15.0), 12.983f);
+    Shape* b2 = new Box(name1, mat1 ,glm::vec3(0, 0, 15.0),glm::vec3(20, 20, 40));
+    
+    scene.shapes.push_back(b1);
+    scene.shapes.push_back(b2);
+    scene.materials.insert(std::pair<std::string, Material*>(mat.name, &mat));
+    scene.materials.insert(std::pair<std::string, Material*>(mat1.name, &mat1));
+    */
 
 	if (myfile.is_open())
     { 	std::cout <<"Deine mutter rotzt in der gegnd umher Vol.3" <<"\n";
@@ -77,26 +93,12 @@ Scene SDFLoader::load(std::string const& inpath){
 	     				material = (scene.materials.find(materialname)->second);
 	     				std::cout << "Box2: ";
 
-	     				Box* box = new Box;
-	     				box(boxname, material, min, max);
+	     				Box* box = new Box(boxname, material, min, max);
 	     				std::cout << "Box3: ";
-
-	     				/*
-	     				Box box;
-	     				ss >> box.name_;
-
-      					ss >> box.m_min.x;
-						ss >> box.m_min.y;
-						ss >> box.m_min.z;
-
-						ss >> box.m_max.x;
-						ss >> box.m_max.y;
-						ss >> box.m_max.z;
-
-						ss >> box.material_;
-						*/
 						
-						scene.shapes.push_back(&box);
+						scene.shapes.push_back(box);
+						std::cout << "Box4: ";
+
 	     			}
 	     			
 	     			else if(firstWord == "sphere")
@@ -118,20 +120,9 @@ Scene SDFLoader::load(std::string const& inpath){
 
 	     				Material* material = (scene.materials.find(materialname)->second);
 
-	     				Sphere sphere(spherename, material, center, radius);
-						/*
-	     				ss >> sphere.name_;
-
-      					ss >> sphere.m_center.x;
-						ss >> sphere.m_center.y;
-						ss >> sphere.m_center.z;
-
-						ss >> sphere.m_radius;
-
-						ss >> sphere.material_;
-						*/
+	     				Sphere* sphere = new Sphere(spherename, material, center, radius);
 						
-						scene.shapes.push_back(&sphere);
+						scene.shapes.push_back(sphere);
 	     			}
 	     			
 	     		}
