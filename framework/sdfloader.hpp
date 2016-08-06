@@ -5,6 +5,7 @@
 #include "shape.hpp"
 #include "sphere.hpp"
 #include "box.hpp"
+#include "color.hpp"
 #include <glm/vec3.hpp>
 #include <vector>
 #include <iostream>

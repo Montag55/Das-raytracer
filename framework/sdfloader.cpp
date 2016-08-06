@@ -43,26 +43,34 @@ Scene SDFLoader::load(std::string const& inpath){
 	     		ss>>firstWord;
 	     		if(firstWord == "material")
 	     		{	
+	     			std::string matname;
+	     			Color ka;
+	     			Color kd;
+	     			Color ks;
+	     			float faktor;
+
 	     			std::cout << "Material: ";
-	     			Material mat;
-	     			ss >> mat.name;
-	     			std::cout << mat.name << "  ";
 
-      				ss >> mat.ka.r;
-					ss >> mat.ka.g;
-					ss >> mat.ka.b;
+	     			ss >> matname;
 
-					ss >> mat.kd.r;
-					ss >> mat.kd.g;
-					ss >> mat.kd.b;
+      				ss >> ka.r;
+					ss >> ka.g;
+					ss >> ka.b;
 
-					ss >> mat.ks.r;
-					ss >> mat.ks.g;
-					ss >> mat.ks.b;
+					ss >> kd.r;
+					ss >> kd.g;
+					ss >> kd.b;
 
-					ss >> mat.m;
+					ss >> ks.r;
+					ss >> ks.g;
+					ss >> ks.b;
 
-					scene.materials.insert(std::pair<std::string, Material*>(mat.name, &mat));
+					ss >> faktor;
+
+					Material* material = new Material(matname, ka, kd, ks, faktor);
+
+
+					scene.materials.insert(std::pair<std::string, Material*>(matname, material));
 	     		}     		
 	     		else if(firstWord == "shape")
 	     		{
@@ -88,6 +96,7 @@ Scene SDFLoader::load(std::string const& inpath){
 	     				ss >> max.z;
 
 	     				ss >> materialname;
+
 
 	     				Material* material = new Material;
 	     				material = (scene.materials.find(materialname)->second);
@@ -118,9 +127,11 @@ Scene SDFLoader::load(std::string const& inpath){
 	     				ss >> radius;
 	     				ss >> materialname;
 
-	     				Material* material = (scene.materials.find(materialname)->second);
 
-	     				Sphere* sphere = new Sphere(spherename, material, center, radius);
+	     				Material* material1 = new Material;
+	     				material1 = (scene.materials.find(materialname)->second);
+
+	     				Sphere* sphere = new Sphere(spherename, material1, center, radius);
 						
 						scene.shapes.push_back(sphere);
 	     			}
@@ -128,6 +139,7 @@ Scene SDFLoader::load(std::string const& inpath){
 	     		}
 	     	}
     	}
+
     myfile.close();
     std::cout <<"Deine mutter rotzt in der gegnd umher Vol.ii" <<"\n";
   }

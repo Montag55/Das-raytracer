@@ -69,7 +69,8 @@ Hit Sphere::intersect(Ray const& ray) const
 			m_center, m_radius, spherehit.m_intersection, spherehit.m_normal);
 
 		std::cout<< "Spherehit at: " <<spherehit.m_intersection.x  << ", "
-	   << spherehit.m_intersection.y  << ", "<< spherehit.m_intersection.z << "\n";
+	    << spherehit.m_intersection.y  << ", "<< spherehit.m_intersection.z << "\n";
+	    
 		if (spherehit.m_hit)
 		{
 			spherehit.m_distance = glm::distance(ray.origin, spherehit.m_intersection);

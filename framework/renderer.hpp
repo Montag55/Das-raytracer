@@ -5,11 +5,9 @@
 #include "pixel.hpp"
 #include "ppmwriter.hpp"
 #include <string>
-#include "shape.hpp"
-#include "sphere.hpp"
-#include "material.hpp"
 #include <glm/glm.hpp>
 #include "scene.hpp"
+#include "hit.hpp"
 class Renderer
 {
 public:
@@ -17,8 +15,8 @@ public:
 
   void render();
   void write(Pixel const& p);
-  Color givacolor(Ray const& ray, Scene const& scene);
-  
+  Hit ohit(Ray const& ray) const;
+  Color givacolor(Ray const& ray);
 
   inline std::vector<Color> const& colorbuffer() const
   {
