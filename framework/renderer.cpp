@@ -23,7 +23,7 @@ Renderer::Renderer(Scene const& scene, unsigned int width, unsigned int height, 
 Organisiert die Pixel Farbgebung! */
 void Renderer::render()
 {
-  float distance = 100; // to be set
+  float distance = 50; // to be set
   //Was ost ,ot ungerader eingabe?
   float height = (-float(m_height)/2); 
 
@@ -93,15 +93,27 @@ Color Renderer::givacolor(Ray const& ray)
 {
   Hit Hitze = ohit(ray);
   Color clr;
-  if(Hitze.m_hit==true)
+  if(Hitze.m_hit==true) //Treffer?
   {
-    clr +=Hitze.m_shape->material().ka*m_scene.ambient;//ambient light
-    return clr;   
+    clr +=(m_scene.ambient*(Hitze.m_shape->material().ka)); //default Licht
+
+    for(auto& light : m_scene.lights) 
+    {
+      Ray raylight = Ray(Hitze.m_intersection,glm::normalize(light->m_point-Hitze.m_intersection));
+      Hit LightHitze = ohit(raylight);
+      
+      int distance= glm::length(Hitze.m_intersection-light->m_point);
+      
+      if (LightHitze.m_distance>distance)
+      {
+        clr+=(Hitze.m_shape->material().kd*light->m_color);//Es gibt Licht!
+      }
+    }
+    return clr;
   }
-  std::cout << "Hinterm Licht gibt es keinen Mond, wenn du etwas triffst.\n";
-  m_scene.ambient;
-  return clr; 
-}    
+  clr+=m_scene.ambient;
+  return clr;   
+}   
 
 
  /*Fkt: ohit
