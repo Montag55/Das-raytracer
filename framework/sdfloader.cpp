@@ -117,6 +117,8 @@ Scene SDFLoader::load(std::string const& inpath){
 						
 						scene.shapes.push_back(sphere);
 	     			}
+	     		}	
+	     		
 	     		else if(firstWord == "light")
 	     		{
 	     			ss>>firstWord;
@@ -124,10 +126,11 @@ Scene SDFLoader::load(std::string const& inpath){
 	     			Color lightcolor;
 	     			glm::vec3 lightpoint;
 
-	     			
+	     			std::cout << "Lichter: "<< "\n";
 
 	     			if(firstWord != "ambient")
 	     			{	
+	     				std::cout << "Diffuse: "<< "\n";
 	     				ss >> lightname;
 	     				ss >> lightpoint.x;
 	     				ss >> lightpoint.y;
@@ -149,13 +152,14 @@ Scene SDFLoader::load(std::string const& inpath){
 	     				ss >> lightcolor.b;
 
 	     				scene.ambient = lightcolor;
+	     				std::cout << "rot wert des momentanen Ambient lichts: " << scene.ambient.r << "\n";
 
 	     			}
 	     			
 
 	     		}
 	     			
-	     		}
+	     		
 	     	}
     	}
 

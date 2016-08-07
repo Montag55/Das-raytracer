@@ -95,11 +95,11 @@ Color Renderer::givacolor(Ray const& ray)
   Color clr;
   if(Hitze.m_hit==true)
   {
-    clr +=Hitze.m_shape->material().ka;//ambient light
+    clr +=Hitze.m_shape->material().ka*m_scene.ambient;//ambient light
     return clr;   
   }
-  std::cout << "Hinterm Mond gibts kein Licht wennd du nichts triffst.\n";
-  clr=Color (0.2,0.2,0.2); //Ambient light?
+  std::cout << "Hinterm Licht gibt es keinen Mond, wenn du etwas triffst.\n";
+  m_scene.ambient;
   return clr; 
 }    
 
