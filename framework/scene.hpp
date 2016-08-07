@@ -6,6 +6,7 @@
 #include "shape.hpp"
 #include "material.hpp"
 #include "light.hpp"
+#include "color.hpp"
 //#include "camera.hpp"
 
 struct Scene
@@ -13,6 +14,7 @@ struct Scene
 	//OptionalHit intersect(Ray const&) const;
 	std::vector<Shape*> shapes;
 	std::vector<Light*> lights;
+	Color ambient;
 	//Camera camera;
 	std::map<std::string, Material*> materials;
 

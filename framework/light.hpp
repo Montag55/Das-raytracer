@@ -10,7 +10,7 @@
 
 struct Light
 {
-	//constructors
+	//constructoren im Struct?!
 
 	Light():
 		m_name{"default"},

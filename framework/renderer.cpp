@@ -92,13 +92,15 @@ Ermittelt die Fabrbe! */
 Color Renderer::givacolor(Ray const& ray)
 {
   Hit Hitze = ohit(ray);
-  if (Hitze.m_hit==true)
+  Color clr;
+  if(Hitze.m_hit==true)
   {
-    return Hitze.m_shape->material().ka;   
+    clr +=Hitze.m_shape->material().ka;//ambient light
+    return clr;   
   }
-  std::cout << "ohit erfolgt, sollte leer sein." << "\n";
-  return Color (0.2,0.2,0.2); //Ambient light?
-
+  std::cout << "Hinterm Mond gibts kein Licht wennd du nichts triffst.\n";
+  clr=Color (0.2,0.2,0.2); //Ambient light?
+  return clr; 
 }    
 
 

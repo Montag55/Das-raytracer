@@ -124,21 +124,34 @@ Scene SDFLoader::load(std::string const& inpath){
 	     			Color lightcolor;
 	     			glm::vec3 lightpoint;
 
-	     			ss >> lightname;
+	     			
 
 	     			if(firstWord != "ambient")
-	     			{
+	     			{	
+	     				ss >> lightname;
 	     				ss >> lightpoint.x;
 	     				ss >> lightpoint.y;
 	     				ss >> lightpoint.z;
-	     			}
-	     			ss >> lightcolor.r;
-	     			ss >> lightcolor.g;
-	     			ss >> lightcolor.b;
-	     			
-	     			Light* light = new Light(lightname, lightcolor, lightpoint);
 
-	     			scene.lights.push_back(light);
+	     				ss >> lightcolor.r;
+	     				ss >> lightcolor.g;
+	     				ss >> lightcolor.b;
+	     			
+	     				Light* light = new Light(lightname, lightcolor, lightpoint);
+
+	     				scene.lights.push_back(light);
+	     			}
+	     			else{
+	     				
+	     				ss >> lightname; //ambient needs no lightname -> its just a color.
+	     				ss >> lightcolor.r;
+	     				ss >> lightcolor.g;
+	     				ss >> lightcolor.b;
+
+	     				scene.ambient = lightcolor;
+
+	     			}
+	     			
 
 	     		}
 	     			

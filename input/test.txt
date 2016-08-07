@@ -5,3 +5,4 @@ define shape box rtop 0 0 100 100 200 200 red
 define shape box rbottom 0 0 100 -100 -200 -200 green
 define shape sphere bsphere 0 0 20 5 blue
 define light diffuse sun 500 800 0 1.0 1.0 1.0
+define light ambient ambient 0.1 0.1 0.1
