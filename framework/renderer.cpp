@@ -23,7 +23,7 @@ Renderer::Renderer(Scene const& scene, unsigned int width, unsigned int height, 
 Organisiert die Pixel Farbgebung! */
 void Renderer::render()
 {
-  float distance = 50; // to be set
+  float distance = 200; // to be set
   //Was ost ,ot ungerader eingabe?
   float height = (-float(m_height)/2); 
 
@@ -99,14 +99,16 @@ Color Renderer::givacolor(Ray const& ray)
 
     for(auto& light : m_scene.lights) 
     {
-      Ray raylight = Ray(Hitze.m_intersection,glm::normalize(light->m_point-Hitze.m_intersection));
+      glm::vec3 direction=glm::normalize(light->m_point-Hitze.m_intersection);
+      glm::vec3 origin= Hitze.m_intersection+glm::normalize(Hitze.m_normal)*0.0001f; //Damit es sich nicht selbst trifft...
+      Ray raylight = Ray(origin,direction);
       Hit LightHitze = ohit(raylight);
       
       int distance= glm::length(Hitze.m_intersection-light->m_point);
       
-      if (LightHitze.m_distance>distance)
+      if (LightHitze.m_distance>distance) //Hier wird der Gegenstand direkt vom Licht getroffen.
       {
-        clr+=(Hitze.m_shape->material().kd*light->m_color);//Es gibt Licht!
+        clr+=light->m_color * Hitze.m_shape->material().kd * glm::dot(glm::normalize(Hitze.m_normal), direction); //Farben * Skalarprodukt;
       }
     }
     return clr;

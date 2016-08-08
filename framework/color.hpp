@@ -60,6 +60,14 @@ struct Color
     auto tmp(a);
     tmp -= b;
     return tmp;
+  } 
+
+
+  friend Color operator*(Color const& a, float b)  //Fürs Skalarprodukt in givacolor!
+  {
+    auto tmp(a);
+    tmp *= b;
+    return tmp;
   }
 
   Color& operator*=(Color other)
@@ -67,6 +75,14 @@ struct Color
         r *= other.r;
         g *= other.g;
         b *= other.b;
+        return *this;
+    }
+
+    Color& operator*=(float other) //Fürs Skalarprodukt in givacolor!
+    {
+        r *= other;
+        g *= other;
+        b *= other;
         return *this;
     }
     
