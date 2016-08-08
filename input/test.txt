@@ -1,14 +1,19 @@
 define material red 1 0 0 1 0 0 1 0 0 1
 define material blue 0 0 1 0 0 1 0 0 1 1
-define material green 0 1 0 0 1 0 0 1 0 1
-define material golden 0.505523 0.931373 0.215686 0.405523 0.831373 0.215686 0.405523 0.831373 0.215686 1
+define material green 0 1 1 0 1 1 0 1 1 1
+#
+define shape box rtop -30 -30 20  -10 -10 40 red
+define shape box rtop 10 10 20 30 30 40 red
+#
+#define shape box rtop -30 -40 30  -10 -10 60 red
+#define shape box rtop 10 10 20 40 40 60 red
+#
+define shape sphere bsphere 0 0 20 5 blue
 
-define light diffuse mitte 0 0 10 0.8 0.8 0.8
-define light diffuse rechts 0 3 30 1 0.8 0.2
+#
+define light diffuse sun1 0 0 30 0.0 0.5 0.5
+define light diffuse sun1 0 0 -10 0.0 0.5 0.5
+define light diffuse sun2 5 5 -10 0.5 0.5 0.0
+define light diffuse sun3 -10 0 20 0.5 0.5 0.5
+#
 define light ambient ambient 0.2 0.2 0.2
-
-define shape sphere bsphere 0 10 20 10 golden
-define shape sphere bsphere 10 0 20 10 blue
-define shape sphere bsphere -10 0 20 10 green
-define shape sphere bsphere 0 -10 20 10 red
-define shape sphere bsphere 0 0 0 200 red

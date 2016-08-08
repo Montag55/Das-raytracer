@@ -3,6 +3,7 @@
 #include <cmath>
 #include <algorithm>
 #include <iostream>
+#include <catch.hpp>
 
 
 //Constructors
@@ -92,80 +93,39 @@ Hit Box::intersect(Ray const& ray) const
 
         boxhit.m_shape = std::make_shared<Box> (*this);
         boxhit.m_intersection = glm::vec3{tmin*ray.direction.x, tmin*ray.direction.y, tmin*ray.direction.z};
-    }
 
-    /* Alte!
+        
 
-	float txmin = (m_min.x - ray.origin.x) / ray.direction.x; 
-    float txmax = (m_max.x - ray.origin.x) / ray.direction.x; 
- 
-    if (txmin > txmax) std::swap(txmin, txmax); 
-    float tmin = txmin;
-    float tmax = txmax;
- 
-    float tymin = (m_min.y - ray.origin.y) / ray.direction.y; 
-    float tymax = (m_max.y - ray.origin.y) / ray.direction.y; 
- 
-    if (tymin > tymax) std::swap(tymin, tymax); 
- 
-    if ((tmin > tymax) || (tymin > tmax)) 
-        boxhit.m_hit = false; 
- 
-    if (tymin > tmin) 
-        tmin = tymin; 
- 
-    if (tymax < tmax) 
-        tmax = tymax; 
- 
-    float tzmin = (m_min.z - ray.origin.z) / ray.direction.z; 
-    float tzmax = (m_max.z - ray.origin.z) / ray.direction.z; 
- 
-    if (tzmin > tzmax) std::swap(tzmin, tzmax); 
- 
-    if ((tmin > tzmax) || (tzmin > tmax)) 
-        boxhit.m_hit = false; 
- 
-    if (tzmin > tmin) 
-        tmin = tzmin; 
- 
-    if (tzmax < tmax) 
-        tmax = tzmax; 
- 
-    boxhit.m_hit = true;
-   
-    
-    if (boxhit.m_hit)
-    {
-        boxhit.m_distance = sqrt((txmin-ray.origin.x)*(txmin-ray.origin.x)+
-                                (tymin-ray.origin.y)*(tymin-ray.origin.y)+
-                                (tzmin-ray.origin.z)*(tzmin-ray.origin.z)
-                                );
+        if((boxhit.m_intersection.x) == Approx(m_min.x))
+            {
+                boxhit.m_normal = glm::vec3{-1, 0, 0};
+            }
 
-        boxhit.m_shape = std::make_shared<Box> (*this);
-        boxhit.m_intersection = glm::vec3{tmin*ray.m_dir.x, tmin*ray.m_dir.y, tmin*ray.m_dir.z};
-    }
+        else if((boxhit.m_intersection.x) == Approx(m_max.x))
+            {
+                boxhit.m_normal = glm::vec3{1, 0, 0};
+            }
 
-    //nur zum pushen hinzugefügt
-    */
+        else if((boxhit.m_intersection.y) == Approx(m_min.y))
+            {
+                boxhit.m_normal = glm::vec3{0, -1, 0};
+            }
 
-    
+        else if((boxhit.m_intersection.y) == Approx(m_max.y))
+            {
+                boxhit.m_normal = glm::vec3{0, 1, 0};
+            }
 
+        else if((boxhit.m_intersection.z) == Approx(m_min.z))
+            {
+                boxhit.m_normal = glm::vec3{0, 0, -1};
+            }
 
-
-    /*
-    if (tmax > std::max(0.0, tmin)) {
-        boxhit.m_distance = 
-        );
-
-        boxhit.m_intersection = glm::vec3{
-            tmin*ray.m_dir.x, tmin*ray.m_dir.y, tmin*ray.m_dir.z
-            };
-        boxhit.m_normal = normal(boxhit.m_intersection);
-        boxhit.m_shape = std::make_shared<Box>(*this);
-        boxhit.m_hit = true;
-    }
-    */
-
+        else if((boxhit.m_intersection.z) == Approx(m_max.z))
+            {
+                boxhit.m_normal = glm::vec3{0, 0, 1};
+            }
+    } 
     return boxhit;
 }
 

@@ -108,9 +108,13 @@ Color Renderer::givacolor(Ray const& ray)
       
       if (LightHitze.m_distance>distance) //Hier wird der Gegenstand direkt vom Licht getroffen.
       {
-        clr+=light->m_color * Hitze.m_shape->material().kd * glm::dot(glm::normalize(Hitze.m_normal), direction); //Farben * Skalarprodukt;
+        clr+=light->m_color * Hitze.m_shape->material().kd *fabs(glm::dot(glm::normalize(Hitze.m_normal), direction)); //Farben * Skalarprodukt;
       }
     }
+    // Hier kommt Reflekttion hin -> wie berechnet man Austrittswinkel aus normale?
+      
+    
+
     return clr;
   }
   clr+=m_scene.ambient;
