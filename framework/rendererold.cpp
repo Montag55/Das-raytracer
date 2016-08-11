@@ -104,23 +104,15 @@ Color Renderer::givacolor(Ray const& ray)
       Ray raylight = Ray(origin,direction);
       Hit LightHitze = ohit(raylight);
       
-      int distance= glm::length(Hitze.m_intersection-light->m_point); //distanz zwischen Licht und
+      int distance= glm::length(Hitze.m_intersection-light->m_point);
       
       if (LightHitze.m_distance>distance) //Hier wird der Gegenstand direkt vom Licht getroffen.
       {
-        float faktor=(glm::dot((Hitze.m_normal), direction));;
-        if (faktor<0)  // wenn der Winkel des Lichteinfall unterhalb der Oberfläche selbst liegt,
-        {
-          faktor=0; // dann wird das Spatprodukt gleich null und es wird nichts zum Ambientlight addiert.
-        }
-        clr+=light->m_color * Hitze.m_shape->material().kd * faktor;
-        Ray originisec{(0.0f, 0.0f, 0.0f), Hitze.m_intersection};
-        clr+= m_color*Hitze.m_shape->material().ks*
-        (pow_(glm::dot(originisec.inv_direction, 
-                      2*( glm::dot(Hitze.m_normal, raylight))*Hitze.m_normal - raylight),
-        (Hitze.m_shape->material.m)));
+        clr+=light->m_color * Hitze.m_shape->material().kd *fabs(glm::dot((Hitze.m_normal), direction)); //Farben * Skalarprodukt;
+      }
     }
     // Hier kommt Reflekttion hin -> wie berechnet man Austrittswinkel aus normale?
+      
     
 
     return clr;

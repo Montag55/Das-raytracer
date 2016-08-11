@@ -8,6 +8,7 @@
 #include <glm/glm.hpp>
 #include "scene.hpp"
 #include "hit.hpp"
+#include "ray.hpp"
 class Renderer
 {
 public:
