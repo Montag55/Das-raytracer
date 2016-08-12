@@ -6,6 +6,8 @@
 #include <sstream>
 #include "raytracer.hpp"
 #include "renderer.hpp"
+#include "camera.hpp"
+
 
 
 

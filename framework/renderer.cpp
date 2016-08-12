@@ -1,8 +1,5 @@
-// renderer.cpp 
-// Thorbe GREAT
 #include "renderer.hpp"
 #include <glm/glm.hpp>
-//Default
   
  /*Custom 1 
 ######################################
@@ -23,8 +20,7 @@ Renderer::Renderer(Scene const& scene, unsigned int width, unsigned int height, 
 Organisiert die Pixel Farbgebung! */
 void Renderer::render()
 {
-  float distance = 200; // to be set
-  //Was ost ,ot ungerader eingabe?
+  float distance = 200;//m_width  / (2*std::tan(0.5*m_scene.camera.m_fov_x *M_PI / 180)); //krasser trigonometrischer kack zur Bestimmung der Bilddistanz
   float height = (-float(m_height)/2); 
 
   for (unsigned y = 0; y < m_height; ++y) {     //Horizontal
@@ -102,28 +98,41 @@ Color Renderer::givacolor(Ray const& ray)
       glm::vec3 direction=glm::normalize(light->m_point-Hitze.m_intersection);
       glm::vec3 origin= Hitze.m_intersection+(Hitze.m_normal)*0.0001f; //Damit es sich nicht selbst trifft...
       Ray raylight = Ray(origin,direction);
-      Hit LightHitze = ohit(raylight);
+      Hit LightObject = ohit(raylight);
       
       int distance= glm::length(Hitze.m_intersection-light->m_point); //distanz zwischen Licht und
       
-      if (LightHitze.m_distance>distance) //Hier wird der Gegenstand direkt vom Licht getroffen.
+      if (LightObject.m_distance>distance) //Hier wird der Gegenstand direkt vom Licht getroffen.
       {
-        float faktor=(glm::dot((Hitze.m_normal), direction));;
+        float faktor=glm::dot(Hitze.m_normal, direction);
         if (faktor<0)  // wenn der Winkel des Lichteinfall unterhalb der Oberfläche selbst liegt,
         {
           faktor=0; // dann wird das Spatprodukt gleich null und es wird nichts zum Ambientlight addiert.
         }
-        clr+=light->m_color * Hitze.m_shape->material().kd * faktor;
-        Ray originisec{(0.0f, 0.0f, 0.0f), Hitze.m_intersection};
-        clr+= m_color*Hitze.m_shape->material().ks*
-        (pow_(glm::dot(originisec.inv_direction, 
-                      2*( glm::dot(Hitze.m_normal, raylight))*Hitze.m_normal - raylight),
-        (Hitze.m_shape->material.m)));
-    }
+        //clr+=light->m_color * Hitze.m_shape->material().kd * faktor;
+        
+        
+        glm::vec3 v = glm::normalize(origin);
+        glm::vec3 r(glm::normalize(glm::reflect(raylight.direction, Hitze.m_normal)));
+
+        float rv = glm::dot(r, v);
+        if(rv<0)
+        {
+          rv = 0;
+        }
+
+        float faktor2 = pow(rv,Hitze.m_shape->material().m);
+        
+        clr+= light->m_color*((Hitze.m_shape->material().kd * faktor)+
+                              Hitze.m_shape->material().ks* faktor2);
+
+
+      }  
     // Hier kommt Reflekttion hin -> wie berechnet man Austrittswinkel aus normale?
     
-
+    }
     return clr;
+    
   }
   clr+=m_scene.ambient;
   return clr;   
