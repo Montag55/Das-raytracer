@@ -4,6 +4,7 @@
 #include <ostream>
 #include "ray.hpp"
 #include "hit.hpp"
+#include <glm/mat4x4.hpp>
 
 
 struct Hit; // forward declaration for intersect.
@@ -32,6 +33,9 @@ public:
 private:
 	std::string name_;
 	Material material_;
+	glm::mat4x4 world_transformation_;
+	glm::mat4x4 world_transformation_inv_;
+
 
 };
 

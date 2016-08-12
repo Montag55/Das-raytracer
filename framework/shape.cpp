@@ -3,17 +3,25 @@
 
 Shape::Shape():
     name_{"default"},
-    material_{} {}
+    material_{},
+    glm::mat4x4 world_transformation_{},
+    glm::mat4x4 world_transformation_inv_{}{}
     //{std::cout<< "Shape constructed" << "\n";}
 
 Shape::Shape(std::string const& name, Material const& mtrl):
     name_{name},
-    material_{mtrl}{} 
+    material_{mtrl},
+    glm::mat4x4 world_transformation_{},
+    glm::mat4x4 world_transformation_inv_{}
+    {} 
     //{std::cout<< "Shape constructed" << "\n";}
 
   Shape::Shape(std::string const& name, Material* const& mtrl):
     name_{name},
-    material_{*mtrl}{} 
+    material_{*mtrl},
+    glm::mat4x4 world_transformation_{},
+    glm::mat4x4 world_transformation_inv_{}
+    {} 
     //{std::cout<< "Shape constructed" << "\n";}
 
 Shape::~Shape(){}

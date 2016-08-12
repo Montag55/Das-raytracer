@@ -23,7 +23,12 @@ Scene SDFLoader::load(std::string const& inpath){
 	     	{	
 	     		std::cout << "Definiere: ";
 	     		ss>>firstWord;
-	     		if(firstWord == "material")
+	     		if(firstWord == "camera")
+	     		{
+	     			ss >> scene.camera.m_name;
+	     			ss >> scene.camera.m_fov_x;
+	     		}
+	     		else if(firstWord == "material")
 	     		{	
 	     			std::string matname;
 	     			Color ka;

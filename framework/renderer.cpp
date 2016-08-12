@@ -20,8 +20,9 @@ Renderer::Renderer(Scene const& scene, unsigned int width, unsigned int height, 
 Organisiert die Pixel Farbgebung! */
 void Renderer::render()
 {
-  float distance = 200;//m_width  / (2*std::tan(0.5*m_scene.camera.m_fov_x *M_PI / 180)); //krasser trigonometrischer kack zur Bestimmung der Bilddistanz
+  float distance = (-float(m_width))  / (2*tan(0.5*m_scene.camera.m_fov_x *M_PI / 180)); //krasser trigonometrischer kack zur Bestimmung der Bilddistanz // minus für neg. z Achse
   float height = (-float(m_height)/2); 
+  std::cout << "Distanz:     " << distance<<"\n";
 
   for (unsigned y = 0; y < m_height; ++y) {     //Horizontal
     float width = (-float(m_width)/2);
@@ -86,8 +87,9 @@ void Renderer::write(Pixel const& p)
 ######################################
 Ermittelt die Fabrbe! */
 Color Renderer::givacolor(Ray const& ray)
-{
-  Hit Hitze = ohit(ray);
+{  
+  glm::mat4x4 transmat;
+  Hit Hitze = ohit(transmat, ray);
   Color clr;
   if(Hitze.m_hit==true) //Treffer?
   {
@@ -98,7 +100,7 @@ Color Renderer::givacolor(Ray const& ray)
       glm::vec3 direction=glm::normalize(light->m_point-Hitze.m_intersection);
       glm::vec3 origin= Hitze.m_intersection+(Hitze.m_normal)*0.0001f; //Damit es sich nicht selbst trifft...
       Ray raylight = Ray(origin,direction);
-      Hit LightObject = ohit(raylight);
+      Hit LightObject = ohit(transmat, raylight);
       
       int distance= glm::length(Hitze.m_intersection-light->m_point); //distanz zwischen Licht und
       
@@ -143,6 +145,25 @@ Color Renderer::givacolor(Ray const& ray)
 ######################################
 Gibt das durch einen Ray als erstes
 getroffene Objekt zurück! */
+Hit Renderer::ohit(glm::mat4x4 const& trans_mat, Ray const& inray) const
+{ 
+  Ray ray = transformRay(trans_mat, inray);
+  Hit hit;
+  Hit temphit;
+  for ( auto &i : m_scene.shapes )
+  {
+    temphit= i->intersect(ray);
+    if(temphit.m_distance<hit.m_distance)
+    {
+      hit =  temphit;  
+      std::cout<<"hit\n";
+    }
+  } 
+  std::cout << "hat er was nicht getroffen?" << "\n";
+  return hit;
+}
+
+/*ALTE ohit
 Hit Renderer::ohit(Ray const& ray) const
 {
   Hit hit;
@@ -159,5 +180,3 @@ Hit Renderer::ohit(Ray const& ray) const
   std::cout << "hat er was nicht getroffen?" << "\n";
   return hit;
 }
-
-
