@@ -88,7 +88,7 @@ void Renderer::write(Pixel const& p)
 Ermittelt die Fabrbe! */
 Color Renderer::givacolor(Ray const& ray)
 {  
-  glm::mat4x4 transmat;
+  glm::mat4x4 transmat(2, 0, 0, 0, 0, 0.707106, -0.707106, 0, 0, 0.707106, 0.707106, 0, 0, 0, 0, 1);
   Hit Hitze = ohit(transmat, ray);
   Color clr;
   if(Hitze.m_hit==true) //Treffer?
@@ -147,6 +147,7 @@ Gibt das durch einen Ray als erstes
 getroffene Objekt zurück! */
 Hit Renderer::ohit(glm::mat4x4 const& trans_mat, Ray const& inray) const
 { 
+
   Ray ray = transformRay(trans_mat, inray);
   Hit hit;
   Hit temphit;
@@ -180,3 +181,4 @@ Hit Renderer::ohit(Ray const& ray) const
   std::cout << "hat er was nicht getroffen?" << "\n";
   return hit;
 }
+*/

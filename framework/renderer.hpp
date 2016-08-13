@@ -16,7 +16,7 @@ public:
 
   void render();
   void write(Pixel const& p);
-  Hit ohit(Ray const& ray) const;
+  Hit ohit(glm::mat4x4 const& trans_mat, Ray const& ray) const;
   Color givacolor(Ray const& ray);
 
   inline std::vector<Color> const& colorbuffer() const

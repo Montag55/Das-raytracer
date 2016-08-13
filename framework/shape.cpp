@@ -4,23 +4,44 @@
 Shape::Shape():
     name_{"default"},
     material_{},
-    glm::mat4x4 world_transformation_{},
-    glm::mat4x4 world_transformation_inv_{}{}
+    world_transformation_{glm::mat4x4 {1, 0, 0, 0,
+                                      0, 1, 0, 0,
+                                      0, 0, 1, 0,
+                                      0, 0, 0, 1}},
+    world_transformation_inv_{glm::mat4x4 {
+        1, 0, 0, 0,
+        0, 1, 0, 0,
+        0, 0, 1, 0,
+        0, 0, 0, 1   
+    }}{}
     //{std::cout<< "Shape constructed" << "\n";}
 
 Shape::Shape(std::string const& name, Material const& mtrl):
     name_{name},
     material_{mtrl},
-    glm::mat4x4 world_transformation_{},
-    glm::mat4x4 world_transformation_inv_{}
+    world_transformation_{glm::mat4x4 {1, 0, 0, 0,
+                                      0, 1, 0, 0,
+                                      0, 0, 1, 0,
+                                      0, 0, 0, 1}},
+    world_transformation_inv_{glm::mat4x4 {1, 0, 0, 0,
+                                           0, 1, 0, 0,
+                                           0, 0, 1, 0,
+                                           0, 0, 0, 1
+                                          }}
     {} 
     //{std::cout<< "Shape constructed" << "\n";}
 
   Shape::Shape(std::string const& name, Material* const& mtrl):
     name_{name},
     material_{*mtrl},
-    glm::mat4x4 world_transformation_{},
-    glm::mat4x4 world_transformation_inv_{}
+    world_transformation_{glm::mat4x4 {1, 0, 0, 0,
+                                      0, 1, 0, 0,
+                                      0, 0, 1, 0,
+                                      0, 0, 0, 1}},
+    world_transformation_inv_{glm::mat4x4 {1, 0, 0, 0,
+                                      0, 1, 0, 0,
+                                      0, 0, 1, 0,
+                                      0, 0, 0, 1}}
     {} 
     //{std::cout<< "Shape constructed" << "\n";}
 
