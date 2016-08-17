@@ -11,11 +11,12 @@
 
 struct Scene
 {
-	std::vector<Shape*> shapes;
+	std::shared_ptr<Shape> shapes;
 	std::vector<Light*> lights;
 	Color ambient;
 	Camera camera;
 	std::map<std::string, Material*> materials;
+	//std::shared_ptr<Composite> composite;
 };
 
 #endif
