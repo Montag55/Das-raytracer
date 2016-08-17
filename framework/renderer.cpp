@@ -30,7 +30,7 @@ void Renderer::render()
       
       Pixel p(x,y);
       Ray rayman {{0,0,0}, glm::normalize(glm::vec3(width, height, distance))};
-      std::cout << rayman.direction.x << "  " << rayman.direction.y << "  " << rayman.direction.z<<"\n";
+      //std::cout << rayman.direction.x << "  " << rayman.direction.y << "  " << rayman.direction.z<<"\n";
       p.color=givacolor(rayman);
       write(p);
 
@@ -88,7 +88,11 @@ void Renderer::write(Pixel const& p)
 Ermittelt die Fabrbe! */
 Color Renderer::givacolor(Ray const& ray)
 {  
-  glm::mat4x4 transmat(2, 0, 0, 0, 0, 0.707106, -0.707106, 0, 0, 0.707106, 0.707106, 0, 0, 0, 0, 1);
+  //glm::mat4x4 transmat(1, 0, 0, 0, 0, 0.707106, -0.707106, 0, 0, 0.707106, 0.707106, 0, 0, 0, 0, 1);
+  glm::mat4x4 transmat(1, 0, 0, 0,
+    0, 1, 0, 0,
+    0, 0, 1, 0, 
+    0, 0, 0, 1);
   Hit Hitze = ohit(transmat, ray);
   Color clr;
   if(Hitze.m_hit==true) //Treffer?
@@ -98,13 +102,13 @@ Color Renderer::givacolor(Ray const& ray)
     for(auto& light : m_scene.lights) 
     {
       glm::vec3 direction=glm::normalize(light->m_point-Hitze.m_intersection);
-      glm::vec3 origin= Hitze.m_intersection+(Hitze.m_normal)*0.0001f; //Damit es sich nicht selbst trifft...
+      glm::vec3 origin= Hitze.m_intersection+(Hitze.m_normal)*0.0003f; //Damit es sich nicht selbst trifft...
       Ray raylight = Ray(origin,direction);
-      Hit LightObject = ohit(transmat, raylight);
+      Hit ShadowObject = ohit(transmat, raylight);
       
       int distance= glm::length(Hitze.m_intersection-light->m_point); //distanz zwischen Licht und
       
-      if (LightObject.m_distance>distance) //Hier wird der Gegenstand direkt vom Licht getroffen.
+      if (ShadowObject.m_distance>distance) //Hier wird der Gegenstand direkt vom Licht getroffen.
       {
         float faktor=glm::dot(Hitze.m_normal, direction);
         if (faktor<0)  // wenn der Winkel des Lichteinfall unterhalb der Oberfläche selbst liegt,
@@ -160,7 +164,7 @@ Hit Renderer::ohit(glm::mat4x4 const& trans_mat, Ray const& inray) const
       std::cout<<"hit\n";
     }
   } 
-  std::cout << "hat er was nicht getroffen?" << "\n";
+  //std::cout << "hat er was nicht getroffen?" << "\n";
   return hit;
 }
 
