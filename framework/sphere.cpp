@@ -74,7 +74,7 @@ Hit Sphere::intersect(Ray const& ray) const
 		if (spherehit.m_hit)
 		{
 			spherehit.m_distance = glm::distance(ray.origin, spherehit.m_intersection);
-			spherehit.m_shape = std::make_shared<Sphere> (*this);
+			spherehit.m_shape = this;
 		}
 			
 		return spherehit;

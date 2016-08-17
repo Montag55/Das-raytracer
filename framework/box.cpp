@@ -86,12 +86,9 @@ Hit Box::intersect(Ray const& ray) const
     if (tmax > std::max(0.0, tmin))
     {   
         boxhit.m_hit = true;
-        boxhit.m_distance = sqrt(tmin*tmin*(
-                                ray.direction.x*ray.direction.x +
-                                ray.direction.y*ray.direction.y +
-                                ray.direction.z*ray.direction.z));
+        boxhit.m_distance = glm::length(boxhit.m_intersection-ray.origin);
 
-        boxhit.m_shape = std::make_shared<Box> (*this);
+        boxhit.m_shape = this;
         boxhit.m_intersection = glm::vec3{tmin*ray.direction.x, tmin*ray.direction.y, tmin*ray.direction.z};
 
         

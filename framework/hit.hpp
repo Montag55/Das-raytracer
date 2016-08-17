@@ -22,7 +22,7 @@ struct Hit
     double m_distance;
     glm::vec3 m_intersection;
     glm::vec3 m_normal;
-    std::shared_ptr<Shape> m_shape;
+    Shape* m_shape;
 };
 
 #endif
