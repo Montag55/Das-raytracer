@@ -12,7 +12,7 @@ Hit::Hit():
 
 
 Hit::Hit(bool hit, double distance, glm::vec3 const& intersection,
-        glm::vec3 const& normal, std::shared_ptr<Shape> shape):
+        glm::vec3 const& normal, const Shape* shape):
 	m_hit{hit},
 	m_distance{distance},
 	m_intersection{intersection},

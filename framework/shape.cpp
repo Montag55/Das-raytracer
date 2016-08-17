@@ -15,7 +15,7 @@ Shape::Shape():
         0, 0, 0, 1   
     }}{}
     //{std::cout<< "Shape constructed" << "\n";}
-
+/*
 Shape::Shape(std::string const& name, Material const& mtrl):
     name_{name},
     material_{mtrl},
@@ -30,10 +30,10 @@ Shape::Shape(std::string const& name, Material const& mtrl):
                                           }}
     {} 
     //{std::cout<< "Shape constructed" << "\n";}
-
-  Shape::Shape(std::string const& name, Material* const& mtrl):
+*/
+Shape::Shape(std::string const& name, std::shared_ptr<Material> mtrl):
     name_{name},
-    material_{*mtrl},
+    material_{mtrl}/*,
     world_transformation_{glm::mat4x4 {1, 0, 0, 0,
                                       0, 1, 0, 0,
                                       0, 0, 1, 0,
@@ -41,7 +41,7 @@ Shape::Shape(std::string const& name, Material const& mtrl):
     world_transformation_inv_{glm::mat4x4 {1, 0, 0, 0,
                                       0, 1, 0, 0,
                                       0, 0, 1, 0,
-                                      0, 0, 0, 1}}
+                                      0, 0, 0, 1}}*/
     {} 
     //{std::cout<< "Shape constructed" << "\n";}
 
@@ -63,7 +63,7 @@ std::ostream& operator <<(std::ostream& os, Shape const& s)
 }
 
 
-Material const& Shape::material() const
+std::shared_ptr<Material> Shape::material() const
 {
   return material_;
 }

@@ -5,6 +5,8 @@
 #include "ray.hpp"
 #include "hit.hpp"
 #include <glm/mat4x4.hpp>
+#include <memory>
+
 
 
 struct Hit; // forward declaration for intersect.
@@ -16,11 +18,12 @@ public:
 	//constr./Destr
 	Shape();
 	Shape(std::string const& name, Material const& mtrl);
-	Shape(std::string const& name, Material* const& mtrl);
+	Shape(std::string const& name, std::shared_ptr<Material> mtrl);
 	virtual ~Shape();
 
 	//getter
-	Material const& material() const;
+	std::shared_ptr<Material> material() const;
+  	void scale(glm::vec3 const& vec);
 	std::string const& name() const;
 
 	virtual float area() const = 0;
@@ -32,7 +35,7 @@ public:
 	
 private:
 	std::string name_;
-	Material material_;
+	std::shared_ptr<Material> material_;
 	glm::mat4x4 world_transformation_;
 	glm::mat4x4 world_transformation_inv_;
 

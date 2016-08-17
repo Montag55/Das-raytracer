@@ -23,15 +23,15 @@ Sphere::Sphere(glm::vec3 const& ctr, float r):
 	    //{std::cout<< "Sphere constructed" << "\n";}
 	}
 
-
+/*
 Sphere::Sphere(std::string const& name, Material const& mtrl, glm::vec3 const& ctr, float r):
 	Shape{name, mtrl},
 	m_center{ctr},
 	m_radius{r}{}
 	//{std::cout<< "Sphere constructed" << "\n";}
+*/
 
-
-Sphere::Sphere(std::string const& name, Material* const& mtrl, glm::vec3 const& ctr, float r):
+Sphere::Sphere(std::string const& name, std::shared_ptr<Material> mtrl, glm::vec3 const& ctr, float r):
 	Shape{name, mtrl},
 	m_center{ctr},
 	m_radius{r}{}

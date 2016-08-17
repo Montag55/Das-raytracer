@@ -12,7 +12,7 @@ struct Hit
 	Hit();
 
 	Hit(bool hit, double distance, glm::vec3 const& intersection,
-        glm::vec3 const& normal, std::shared_ptr<Shape> shape);
+        glm::vec3 const& normal, const Shape* shape);
 
 	//Copyconstructor fehlt noch
 	//unsigned distence? nicht verkacken bitte
@@ -22,7 +22,7 @@ struct Hit
     double m_distance;
     glm::vec3 m_intersection;
     glm::vec3 m_normal;
-    Shape* m_shape;
+    const Shape* m_shape;
 };
 
 #endif

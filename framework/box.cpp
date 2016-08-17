@@ -18,14 +18,14 @@ Box::Box(glm::vec3 const& min, glm::vec3 const& max) :
 	m_min{min},
 	m_max{max}
 	{}
-
+/*
 Box::Box(std::string const& name, Material const& mtrl, glm::vec3 const& min, glm::vec3 const& max )
     : Shape{name, mtrl},
     m_min{min},
     m_max{max}
     {} 
-
-Box::Box(std::string const& name, Material* const& mtrl, glm::vec3 const& min, glm::vec3 const& max )
+*/
+Box::Box(std::string const& name, std::shared_ptr<Material> mtrl, glm::vec3 const& min, glm::vec3 const& max )
     : Shape{name, mtrl},
     m_min{min},
 	m_max{max}
