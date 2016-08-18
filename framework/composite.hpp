@@ -31,7 +31,7 @@ class Composite : public Shape
         m_shapes.push_back(shape);
     } ;
 
-    void set_name(std::string & name)
+    void set_name(std::string const& name)
     {   
         std::cout<< "setname\n";
         std::cout<< name;

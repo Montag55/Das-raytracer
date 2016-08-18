@@ -163,7 +163,7 @@ Scene SDFLoader::load(std::string const& inpath)
 
                         ss>> compname;
                         std::cout<< "Objekt\n";
-
+                        		 std::cout<< compname;
                         scene.m_composite->set_name(compname);
 
                         while (!ss.eof())
