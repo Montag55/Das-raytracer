@@ -163,8 +163,9 @@ Scene SDFLoader::load(std::string const& inpath)
 
                         ss>> compname;
                         std::cout<< "Objekt\n";
-                        		 std::cout<< compname;
-                        scene.m_composite->set_name(compname);
+                        std::cout<< compname;
+                        scene.m_composite= std::make_shared<Composite>(compname);
+                        //scene.m_composite->set_name(compname);
 
                         while (!ss.eof())
                         {	

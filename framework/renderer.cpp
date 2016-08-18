@@ -145,10 +145,10 @@ Color Renderer::raytrace(Ray const& ray)
 ######################################
 Gibt das durch einen Ray als erstes
 getroffene Objekt zurück! */
-Hit Renderer::ohit(glm::mat4x4 const& trans_mat, Ray const& inray) const
+Hit Renderer::ohit(glm::mat4x4 const& trans_mat, Ray const& ray) const
 { 
 
-  Ray ray = transformRay(trans_mat, inray);
+  //Ray ray = transformRay(trans_mat, inray);
   Hit hit;
   Hit temphit;
   for ( auto &i : m_scene.m_shapes )
@@ -160,7 +160,7 @@ Hit Renderer::ohit(glm::mat4x4 const& trans_mat, Ray const& inray) const
       std::cout<<"hit\n";
     }
   } 
-  //std::cout << "hat er was nicht getroffen?" << "\n";
+  std::cout << ray.direction.z << "\n";
   return hit;
 }
 

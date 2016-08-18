@@ -66,7 +66,12 @@ Hit Box::intersect(Ray const& ray) const
 {
 
     Hit boxhit;
-    
+
+    if (m_transf)
+    {
+        ray = transformRay(world_transformation_inv_, ray);
+    }
+
     double t1 = (m_min.x - ray.origin.x)*ray.inv_direction.x;
     double t2 = (m_max.x - ray.origin.x)*ray.inv_direction.x;
     double tmin = std::min(t1, t2);
