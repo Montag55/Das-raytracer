@@ -49,7 +49,7 @@ glm::vec3 const& Sphere::center() const
 float Sphere::radius() const 
 	{return m_radius;}
 
-
+/*
 //functions
 float Sphere::volume() const
 	{
@@ -60,7 +60,7 @@ float Sphere::area() const
 	{
 		return 4.0f* M_PI * m_radius * m_radius;
 	}
-
+*/
 Hit Sphere::intersect(Ray const& ray) const
 	{
 		Hit spherehit;

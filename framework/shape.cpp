@@ -72,3 +72,29 @@ std::string const& Shape::name() const
 {
   return name_;
 }
+
+void Shape::scale(glm::vec3 const& vec)
+  {   
+    world_transformation_ = glm::scale(glm::mat4(), vec) * world_transformation_;
+    world_transformation_inv_ = glm::scale(glm::mat4(), 1.0f /vec) * world_transformation_inv_;
+    //world_transformation_inv__transp = glm::transpose(glm::mat3(world_transformation_inv_));
+    m_transf=true;
+  }
+
+void Shape::rotate(float angle, glm::vec3 const& vec)
+    {
+
+      world_transformation_ = glm::rotate(glm::mat4(), angle, vec) * world_transformation_;
+      world_transformation_inv_ = glm::rotate(glm::mat4(), -angle, vec) * world_transformation_inv_;
+      //world_transformation_inv__transp = glm::transpose(glm::mat3(world_transformation_inv_));
+      m_transf=true;
+
+    }
+
+void Shape::translate(glm::vec3 const& vec)
+    {
+      world_transformation_ = glm::translate(glm::mat4(), vec) * world_transformation_; //Erstellt aus dem Vec3 eine Matrix und multipliziert diese mit der aktuellen World Matrize
+      world_transformation_inv_ = glm::translate(glm::mat4(), -vec) * world_transformation_inv_;
+      //t_inv_transp = glm::transpose(glm::mat3(t_inv));
+      m_transf=true;
+    }

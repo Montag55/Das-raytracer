@@ -1,9 +1,11 @@
 #include <string>
 #include "scene.hpp"
-//#include "composite.hpp"
+#include "composite.hpp"
 #include "sdfloader.hpp"
 #include <fstream>
 #include <sstream>
+#include <memory>
+
 
 Scene SDFLoader::load(std::string const& inpath)
 {
@@ -25,8 +27,46 @@ Scene SDFLoader::load(std::string const& inpath)
             ss<<line;                   //First Line in
             std::string firstWord;
             ss>>firstWord;              //First Word in
+            
+            if(firstWord == "transform")
+            {
+                std::string shapename, transform;
+                float x, y, z;
 
-            if (firstWord=="define")
+                ss >> shapename;
+
+                auto shape = tmpcomp.find(shapename);
+                if(shape != tmpcomp.end()) 
+                {   
+                    ss >> transform;
+                    if (transform == "scale") 
+                    {
+                        ss >> x;
+                        ss >> y;
+                        ss >> z;
+
+                        shape->second->scale(glm::vec3(x,y,z));
+                    }else if (transform == "rotate") 
+                    {     
+                        float angle;
+                        ss >> angle;
+
+                        ss >> x;
+                        ss >> y;
+                        ss >> z;
+
+                        shape->second->rotate(angle,glm::vec3(x,y,z));
+                    }
+                    else if (transform == "translate")
+                    {
+                        ss >> x;
+                        ss >> y;
+                        ss >> z;
+
+                        shape->second->translate(glm::vec3(x,y,z));
+                    }
+                }
+            }else if (firstWord=="define")
             {   
                 std::cout << "Definiere: ";
                 ss>>firstWord;
@@ -115,24 +155,29 @@ Scene SDFLoader::load(std::string const& inpath)
                         shape_pointer sphere= std::make_shared<Sphere>(spherename, material, center, radius);
                         tmpcomp.insert(std::pair<std::string, shape_pointer>(sphere->name(), sphere));
                         
-                    }/*else if (firstWord == "composite")
+                    }else if (firstWord == "composite")
                     {
                         std::cout<< "Composite\n";
                         std::string compname;
                         std::string shapename;
 
                         ss>> compname;
-                        scene.m_composite= std::make_shared<Composite>(compname);
+                        std::cout<< "Objekt\n";
+
+                        scene.m_composite->set_name(compname);
+
                         while (!ss.eof())
-                        {
+                        {	
+
                             ss>>shapename;
                             auto search = tmpcomp.find(shapename);
                             if(search != tmpcomp.end()) 
-                            {
-                                scene.m_composite->add(search->second);
+                            {	
+                            	std::shared_ptr<Shape> tempshape = search->second;
+                                scene.m_composite->add(tempshape);
                             }   
                         }
-                    }*/
+                    }
                 }
                 else if(firstWord == "light") //##############-Light
                 {
@@ -177,9 +222,9 @@ Scene SDFLoader::load(std::string const& inpath)
                 }
             }
         }
-    myfile.close();
-  }
-  else std::cout << "Unable to open file"; 
+   		myfile.close();
+  	}
+  	else std::cout << "Unable to open file"; 
 
-  return scene;
+	return scene;
 }

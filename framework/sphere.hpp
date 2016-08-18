@@ -24,11 +24,11 @@ public:
 	 //getter
 	 glm::vec3 const& center() const;
 	 float radius() const;
-
+	 /*
 	 //functions
 	 float volume() const override;
 	 float area() const override;
-
+	*/
 	 std::ostream& print(std::ostream& os) const override;
 
 	 Hit intersect(Ray const& ray) const override; //Zu Hit geändert: infos auch über Schnittpunkt, statt Bool.

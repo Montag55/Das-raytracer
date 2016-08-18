@@ -47,7 +47,7 @@ glm::vec3 const& Box::max() const
 
 
 
-//functions
+/*//functions
 float Box::volume() const
 	{
 		auto diff = m_max - m_min;
@@ -60,6 +60,7 @@ float Box::area() const
 
 	return 2*(diff.y*diff.z + diff.x*diff.z + diff.x*diff.y); 
 }
+*/
 
 Hit Box::intersect(Ray const& ray) const
 {

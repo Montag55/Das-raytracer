@@ -22,8 +22,8 @@ public:
 	 glm::vec3 const& max() const;
 
 	 //functions
-	 float volume() const override;
-	 float area() const override;
+	 //float volume() const override;
+	 //float area() const override;
 
 	 std::ostream& print(std::ostream& os) const override;
 

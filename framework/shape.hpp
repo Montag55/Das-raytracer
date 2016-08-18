@@ -1,11 +1,16 @@
 #ifndef SHAPE_HPP
 #define SHAPE_HPP
+#define GLM_FORCE_RADIANS
 #include "material.hpp"
 #include <ostream>
 #include "ray.hpp"
 #include "hit.hpp"
 #include <glm/mat4x4.hpp>
 #include <memory>
+#include "glm/glm.hpp"
+#include "glm/gtc/matrix_transform.hpp"
+#include "glm/gtx/transform.hpp"
+
 
 
 
@@ -23,21 +28,27 @@ public:
 
 	//getter
 	std::shared_ptr<Material> material() const;
-  	void scale(glm::vec3 const& vec);
-	std::string const& name() const;
 
+	std::string const& name() const;
+	/*
 	virtual float area() const = 0;
 	virtual float volume() const = 0;
+	*/
 
 	virtual std::ostream& print(std::ostream& os) const;
 
 	virtual Hit intersect(Ray const& ray) const = 0;
+
+	virtual void scale(glm::vec3 const& vec);
+	virtual void rotate(float angle, glm::vec3 const& vec);
+	virtual void translate(glm::vec3 const& vec);
 	
 private:
 	std::string name_;
 	std::shared_ptr<Material> material_;
 	glm::mat4x4 world_transformation_;
 	glm::mat4x4 world_transformation_inv_;
+	bool m_transf;
 
 
 };
