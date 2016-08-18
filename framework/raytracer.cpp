@@ -72,7 +72,7 @@
           std::string filepath= std::string(m_in)+"/"+entry->d_name;
           std::cout << "-SDFLoader:" << filepath << std::endl;
           Scene scene = SDFLoader::load(filepath); 
-          
+          std::cout << "Szene ist geladen" << std::endl;
           std::string outputfile=std::string(m_out)+"/out"+entry->d_name;
           outputfile =outputfile.substr(0, outputfile.size()-3);//delete txt
           outputfile+="ppm";

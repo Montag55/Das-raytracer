@@ -15,7 +15,7 @@ Shape::Shape():
         0, 0, 0, 1}}
     {}
     //{std::cout<< "Shape constructed" << "\n";}
-
+/*
 Shape::Shape(std::string const& name, Material const& mtrl):
     name_{name},
     material_{mtrl},
@@ -29,10 +29,10 @@ Shape::Shape(std::string const& name, Material const& mtrl):
                                            0, 0, 0, 1}}
     {} 
     //{std::cout<< "Shape constructed" << "\n";}
-
-  Shape::Shape(std::string const& name, Material* const& mtrl):
+*/
+Shape::Shape(std::string const& name, std::shared_ptr<Material> mtrl):
     name_{name},
-    material_{*mtrl},
+    material_{mtrl}/*,
     world_transformation_{glm::mat4x4 {1, 0, 0, 0,
                                       0, 1, 0, 0,
                                       0, 0, 1, 0,
@@ -40,7 +40,8 @@ Shape::Shape(std::string const& name, Material const& mtrl):
     world_transformation_inv_{glm::mat4x4 {1, 0, 0, 0,
                                           0, 1, 0, 0,
                                           0, 0, 1, 0,
-                                          0, 0, 0, 1}}
+                                          0, 0, 0, 1}}*/
+
     {} 
     //{std::cout<< "Shape constructed" << "\n";}
 
@@ -62,7 +63,7 @@ std::ostream& operator <<(std::ostream& os, Shape const& s)
 }
 
 
-Material const& Shape::material() const
+std::shared_ptr<Material> Shape::material() const
 {
   return material_;
 }
@@ -72,12 +73,43 @@ std::string const& Shape::name() const
   return name_;
 }
 
-//###########################################################
-glm::mat4x4 const& Shape::transformation_matrix() const {
-    return world_transformation_;
+//####################################################################
+bool const& Shape::transf() const{
+  return m_transf;
 }
 
-void Shape::transformation_matrix(glm::mat4x4 const& trans_mat) {
-    world_transformation_ = trans_mat;
+glm::mat4x4 const& Shape::world_transformation() const{
+  return world_transformation_;
 }
-//###########################################################
+
+glm::mat4x4 const& Shape::world_transformation_inv() const{
+  return world_transformation_inv_;
+}
+//####################################################################
+
+
+void Shape::scale(glm::vec3 const& vec)
+  {   
+    world_transformation_ = glm::scale(glm::mat4(), vec) * world_transformation_;
+    world_transformation_inv_ = glm::scale(glm::mat4(), 1.0f /vec) * world_transformation_inv_;
+    //world_transformation_inv__transp = glm::transpose(glm::mat3(world_transformation_inv_));
+    m_transf=true;
+  }
+
+void Shape::rotate(float angle, glm::vec3 const& vec)
+    {
+
+      world_transformation_ = glm::rotate(glm::mat4(), angle, vec) * world_transformation_;
+      world_transformation_inv_ = glm::rotate(glm::mat4(), -angle, vec) * world_transformation_inv_;
+      //world_transformation_inv__transp = glm::transpose(glm::mat3(world_transformation_inv_));
+      m_transf=true;
+
+    }
+
+void Shape::translate(glm::vec3 const& vec)
+    {
+      world_transformation_ = glm::translate(glm::mat4(), vec) * world_transformation_; //Erstellt aus dem Vec3 eine Matrix und multipliziert diese mit der aktuellen World Matrize
+      world_transformation_inv_ = glm::translate(glm::mat4(), -vec) * world_transformation_inv_;
+      //t_inv_transp = glm::transpose(glm::mat3(t_inv));
+      m_transf=true;
+    }

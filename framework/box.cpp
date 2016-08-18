@@ -18,14 +18,14 @@ Box::Box(glm::vec3 const& min, glm::vec3 const& max) :
 	m_min{min},
 	m_max{max}
 	{}
-
+/*
 Box::Box(std::string const& name, Material const& mtrl, glm::vec3 const& min, glm::vec3 const& max )
     : Shape{name, mtrl},
     m_min{min},
     m_max{max}
     {} 
-
-Box::Box(std::string const& name, Material* const& mtrl, glm::vec3 const& min, glm::vec3 const& max )
+*/
+Box::Box(std::string const& name, std::shared_ptr<Material> mtrl, glm::vec3 const& min, glm::vec3 const& max )
     : Shape{name, mtrl},
     m_min{min},
 	m_max{max}
@@ -47,7 +47,7 @@ glm::vec3 const& Box::max() const
 
 
 
-//functions
+/*//functions
 float Box::volume() const
 	{
 		auto diff = m_max - m_min;
@@ -60,12 +60,18 @@ float Box::area() const
 
 	return 2*(diff.y*diff.z + diff.x*diff.z + diff.x*diff.y); 
 }
+*/
 
-Hit Box::intersect(Ray const& ray) const
+Hit Box::intersect(Ray ray) const
 {
 
     Hit boxhit;
-    
+
+    if (transf())
+    {
+        ray = transformRay(world_transformation_inv(), ray);
+    }
+
     double t1 = (m_min.x - ray.origin.x)*ray.inv_direction.x;
     double t2 = (m_max.x - ray.origin.x)*ray.inv_direction.x;
     double tmin = std::min(t1, t2);
@@ -86,12 +92,9 @@ Hit Box::intersect(Ray const& ray) const
     if (tmax > std::max(0.0, tmin))
     {   
         boxhit.m_hit = true;
-        boxhit.m_distance = sqrt(tmin*tmin*(
-                                ray.direction.x*ray.direction.x +
-                                ray.direction.y*ray.direction.y +
-                                ray.direction.z*ray.direction.z));
+        boxhit.m_distance = glm::length(boxhit.m_intersection-ray.origin);
 
-        boxhit.m_shape = std::make_shared<Box> (*this);
+        boxhit.m_shape = this;
         boxhit.m_intersection = glm::vec3{tmin*ray.direction.x, tmin*ray.direction.y, tmin*ray.direction.z};
 
         

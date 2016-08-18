@@ -1,180 +1,245 @@
 #include <string>
 #include "scene.hpp"
+#include "composite.hpp"
 #include "sdfloader.hpp"
 #include <fstream>
 #include <sstream>
+#include <memory>
 
 
-Scene SDFLoader::load(std::string const& inpath){
-  	Scene scene;
-  	std::string line;
-  	std::ifstream myfile(inpath);
+Scene SDFLoader::load(std::string const& inpath)
+{
+    typedef std::shared_ptr<Shape> shape_pointer;
 
-	if (myfile.is_open())
-    { 	
-		while (getline(myfile,line))
-    	{	
-    		std::cout <<"Deine mutter rotzt in der gegnd umher Vol.i" <<"\n";
-	     	std::stringstream ss;
-	     	ss<<line;					//erste Zeile im Stream
-	     	std::string firstWord;
-	     	ss>>firstWord;
-	     	if (firstWord=="define")
-	     	{	
-	     		std::cout << "Definiere: ";
-	     		ss>>firstWord;
-	     		if(firstWord == "camera")
-	     		{
-	     			ss >> scene.camera.m_name;
-	     			ss >> scene.camera.m_fov_x;
-	     		}
-	     		else if(firstWord == "material")
-	     		{	
-	     			std::string matname;
-	     			Color ka;
-	     			Color kd;
-	     			Color ks;
-	     			float faktor;
-
-	     			std::cout << "Material: ";
-
-	     			ss >> matname;
-
-      				ss >> ka.r;
-					ss >> ka.g;
-					ss >> ka.b;
-
-					ss >> kd.r;
-					ss >> kd.g;
-					ss >> kd.b;
-
-					ss >> ks.r;
-					ss >> ks.g;
-					ss >> ks.b;
-
-					ss >> faktor;
-
-					Material* material = new Material(matname, ka, kd, ks, faktor);
+    Scene scene;
+    //scene.m_composite= std::make_shared<Composite>("compname");
+    std::map<std::string, shape_pointer> tmpcomp;
 
 
-					scene.materials.insert(std::pair<std::string, Material*>(matname, material));
-	     		}     		
-	     		else if(firstWord == "shape")
-	     		{
-	     			ss>>firstWord;
-	     			std::cout << "Shape: ";
+    std::string line;
+    std::ifstream myfile(inpath);
 
-	     			if(firstWord == "box")
-	     			{	
-	     				std::cout << "Box: ";
-	     				std::string boxname;
-						glm::vec3 min;
-						glm::vec3 max;
-						std::string materialname;
+    if (myfile.is_open())
+    {   
+        std::cout <<"Deine mutter rotzt in der gegnd umher Vol.i" <<"\n";
+        while (getline(myfile,line))
+        {   
+            std::stringstream ss;
+            ss<<line;                   //First Line in
+            std::string firstWord;
+            ss>>firstWord;              //First Word in
+            
+            if(firstWord == "transform")
+            {
+                std::string shapename, transform;
+                float x, y, z;
 
+                ss >> shapename;
 
-	     				ss >> boxname;
-	     				ss >> min.x;
-	     				ss >> min.y;
-	     				ss >> min.z;
+                auto shape = tmpcomp.find(shapename);
+                if(shape != tmpcomp.end()) 
+                {   
+                    ss >> transform;
+                    if (transform == "scale") 
+                    {
+                        ss >> x;
+                        ss >> y;
+                        ss >> z;
 
-						ss >> max.x;
-	     				ss >> max.y;
-	     				ss >> max.z;
+                        shape->second->scale(glm::vec3(x,y,z));
+                    }else if (transform == "rotate") 
+                    {     
+                        float angle;
+                        ss >> angle;
 
-	     				ss >> materialname;
+                        ss >> x;
+                        ss >> y;
+                        ss >> z;
 
+                        shape->second->rotate(angle,glm::vec3(x,y,z));
+                    }
+                    else if (transform == "translate")
+                    {
+                        ss >> x;
+                        ss >> y;
+                        ss >> z;
 
-	     				Material* material = new Material;
-	     				material = (scene.materials.find(materialname)->second);
-	     				std::cout << "Box2: ";
+                        shape->second->translate(glm::vec3(x,y,z));
+                    }
+                }
+            }else if (firstWord=="define")
+            {   
+                std::cout << "Definiere: ";
+                ss>>firstWord;
+                if(firstWord == "material")//##############-Material
+                {   
+                    //Material-Info------
+                    std::string matname;
+                    Color ka;
+                    Color kd;
+                    Color ks;
+                    float faktor;
+                    //-------------------
 
-	     				Box* box = new Box(boxname, material, min, max);
-	     				std::cout << "Box3: ";
-						
-						scene.shapes.push_back(box);
-						std::cout << "Box4: ";
+                    std::cout << "Material\n";
+                    //Einlesen:
+                    ss >> matname;
 
-	     			}
-	     			
-	     			else if(firstWord == "sphere")
-	     			{	
-	     				std::string spherename;
-	     				glm::vec3 center;
-	     				float radius;
-	     				std::string materialname;
-	     				
+                    ss >> ka.r;
+                    ss >> ka.g;
+                    ss >> ka.b;
 
-	     				ss >> spherename;
+                    ss >> kd.r;
+                    ss >> kd.g;
+                    ss >> kd.b;
 
-	     				ss >> center.x;
-	     				ss >> center.y;
-	     				ss >> center.z;
+                    ss >> ks.r;
+                    ss >> ks.g;
+                    ss >> ks.b;
 
-	     				ss >> radius;
-	     				ss >> materialname;
+                    ss >> faktor;
 
+                    //Einspeichern
+                    std::shared_ptr<Material> material=std::make_shared<Material>(matname, ka, kd, ks, faktor);
+                    scene.m_materials.insert(std::pair<std::string, std::shared_ptr<Material>>(matname, material));
+                }           
+                else if(firstWord == "shape")//##############-Shape
+                {
+                    ss>>firstWord;
+                    std::cout << "Shape: ";
 
-	     				Material* material1 = new Material;
-	     				material1 = (scene.materials.find(materialname)->second);
+                    if(firstWord == "box") //##############-Box
+                    {   
+                        std::cout << "Box\n";
+                        std::string boxname;
+                        glm::vec3 min;
+                        glm::vec3 max;
+                        std::string materialname;
 
-	     				Sphere* sphere = new Sphere(spherename, material1, center, radius);
-						
-						scene.shapes.push_back(sphere);
-	     			}
-	     		}	
-	     		
-	     		else if(firstWord == "light")
-	     		{
-	     			ss>>firstWord;
-	     			std::string lightname;
-	     			Color lightcolor;
-	     			glm::vec3 lightpoint;
+                        ss >> boxname;
+                        ss >> min.x;
+                        ss >> min.y;
+                        ss >> min.z;
 
-	     			std::cout << "Lichter: "<< "\n";
+                        ss >> max.x;
+                        ss >> max.y;
+                        ss >> max.z;
 
-	     			if(firstWord != "ambient")
-	     			{	
-	     				std::cout << "Diffuse: "<< "\n";
-	     				ss >> lightname;
-	     				ss >> lightpoint.x;
-	     				ss >> lightpoint.y;
-	     				ss >> lightpoint.z;
+                        ss >> materialname;
 
-	     				ss >> lightcolor.r;
-	     				ss >> lightcolor.g;
-	     				ss >> lightcolor.b;
-	     			
-	     				Light* light = new Light(lightname, lightcolor, lightpoint);
+                        //Einspeichern
+                        std::shared_ptr<Material> material=(scene.m_materials.find(materialname)->second);
+        
+                        shape_pointer box= std::make_shared<Box>(boxname, material, min, max);
+                        tmpcomp.insert(std::pair<std::string, shape_pointer>(box->name(), box));
+                 
+                    }else if(firstWord == "sphere") //##############-Sphere
+                    {   
+                        std::cout << "Sphere\n";
+                        std::string spherename;
+                        glm::vec3 center;
+                        float radius;
+                        std::string materialname;
+                        
+                        ss >> spherename;
 
-	     				scene.lights.push_back(light);
-	     			}
-	     			else{
-	     				
-	     				ss >> lightname; //ambient needs no lightname -> its just a color.
-	     				ss >> lightcolor.r;
-	     				ss >> lightcolor.g;
-	     				ss >> lightcolor.b;
+                        ss >> center.x;
+                        ss >> center.y;
+                        ss >> center.z;
 
-	     				scene.ambient = lightcolor;
-	     				std::cout << "rot wert des momentanen Ambient lichts: " << scene.ambient.r << "\n";
+                        ss >> radius;
+                        ss >> materialname;
 
-	     			}
-	     			
+                        //Einspeichern
+                        std::shared_ptr<Material> material=(scene.m_materials.find(materialname)->second);
 
-	     		}
-	     			
-	     		
-	     	}
-    	}
+                        shape_pointer sphere= std::make_shared<Sphere>(spherename, material, center, radius);
+                        tmpcomp.insert(std::pair<std::string, shape_pointer>(sphere->name(), sphere));
+                        
+                    }else if (firstWord == "composite")
+                    {
+                        std::cout<< "Composite\n";
+                        std::string compname;
+                        std::string shapename;
 
-    myfile.close();
+                        ss >> compname;
+                        std::cout<< "Objekt\n";
+                        std::cout<< compname;
+                        std::cout<< "Nr.1"<< compname << "\n";
+                        scene.m_composite= std::make_shared<Composite>(compname);
+                        
 
-  }
+                        while (!ss.eof())
+                        {	
 
-  else std::cout << "Unable to open file"; 
+                            ss>>shapename;
+                            std::cout<< "Nr.1" <<shapename << "\n";
+                            auto search = tmpcomp.find(shapename);
+                            if(search != tmpcomp.end()) 
+                            {	
+                                std::cout<< "Katzenklo\n";
+                            	std::shared_ptr<Shape> tempshape = search->second;
+                                scene.m_composite->add(tempshape);
+                            }   
+                        
+                       
+                        /*
+                        for( auto &i : scene.m_composite->m_shapes){
+                        std::cout<< "Objekt in Comp."<<"\n";
+                        //scene.m_composite->set_name("Vadda");
+                        */
+                        }
+                        auto i = scene.m_composite->intersect(Ray());
+                    }
+                }
+                else if(firstWord == "light") //##############-Light
+                {
+                    ss>>firstWord;
+                    std::string lightname;
+                    Color lightcolor;
+                    glm::vec3 lightpoint;
 
- 
+                    std::cout << "Lights: ";
 
-  return scene;
+                    if(firstWord != "ambient") //##############-stand.Light
+                    {   
+                        std::cout << "Diffuse\n";
+                        ss >> lightname;
+                        ss >> lightpoint.x;
+                        ss >> lightpoint.y;
+                        ss >> lightpoint.z;
+
+                        ss >> lightcolor.r;
+                        ss >> lightcolor.g;
+                        ss >> lightcolor.b;
+                    
+                        //Einspeichern
+                        std::shared_ptr<Light> light= std::make_shared<Light>(lightname, lightcolor, lightpoint);
+                        scene.m_lights.push_back(light);
+                    }
+                    else                                //##############-ambi. Light
+                    {                               
+                        std::cout << "Ambient\n";
+                        ss >> lightname; //ambient needs no lightname -> its just a color.
+                        ss >> lightcolor.r;
+                        ss >> lightcolor.g;
+                        ss >> lightcolor.b;
+
+                        //Einspeichern
+                        scene.m_ambient = lightcolor;
+                    }
+                }else if(firstWord == "camera")//##############-Camera
+                {
+                    ss >> scene.m_camera.m_name;
+                    ss >> scene.m_camera.m_fov_x;
+                }
+            }
+        }
+   		myfile.close();
+  	}
+  	else std::cout << "Unable to open file"; 
+
+    scene.m_composite->set_name("Vadda123s");
+	return scene;
+
 }

@@ -23,15 +23,15 @@ Sphere::Sphere(glm::vec3 const& ctr, float r):
 	    //{std::cout<< "Sphere constructed" << "\n";}
 	}
 
-
+/*
 Sphere::Sphere(std::string const& name, Material const& mtrl, glm::vec3 const& ctr, float r):
 	Shape{name, mtrl},
 	m_center{ctr},
 	m_radius{r}{}
 	//{std::cout<< "Sphere constructed" << "\n";}
+*/
 
-
-Sphere::Sphere(std::string const& name, Material* const& mtrl, glm::vec3 const& ctr, float r):
+Sphere::Sphere(std::string const& name, std::shared_ptr<Material> mtrl, glm::vec3 const& ctr, float r):
 	Shape{name, mtrl},
 	m_center{ctr},
 	m_radius{r}{}
@@ -49,7 +49,7 @@ glm::vec3 const& Sphere::center() const
 float Sphere::radius() const 
 	{return m_radius;}
 
-
+/*
 //functions
 float Sphere::volume() const
 	{
@@ -60,8 +60,8 @@ float Sphere::area() const
 	{
 		return 4.0f* M_PI * m_radius * m_radius;
 	}
-
-Hit Sphere::intersect(Ray const& ray) const
+*/
+Hit Sphere::intersect(Ray ray) const
 	{
 		Hit spherehit;
 
@@ -74,7 +74,7 @@ Hit Sphere::intersect(Ray const& ray) const
 		if (spherehit.m_hit)
 		{
 			spherehit.m_distance = glm::distance(ray.origin, spherehit.m_intersection);
-			spherehit.m_shape = std::make_shared<Sphere> (*this);
+			spherehit.m_shape = this;
 		}
 			
 		return spherehit;

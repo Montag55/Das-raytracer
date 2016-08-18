@@ -8,14 +8,22 @@
 #include "light.hpp"
 #include "color.hpp"
 #include "camera.hpp"
+#include "composite.hpp"
 
 struct Scene
 {
-	std::vector<Shape*> shapes;
-	std::vector<Light*> lights;
-	Color ambient;
-	Camera camera;
-	std::map<std::string, Material*> materials;
+		//Lichter
+		std::vector <std::shared_ptr<Light>> m_lights;
+		Color m_ambient;
+		//Shapes
+		std::shared_ptr<Composite> m_composite; 
+		std::vector <std::shared_ptr<Shape>> m_shapes;
+		//Materialien
+		std::map<std::string, std::shared_ptr<Material>> m_materials;
+		//Kamera
+		Camera m_camera;
+
+
 };
 
 #endif

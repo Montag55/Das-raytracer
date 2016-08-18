@@ -20,21 +20,28 @@ Renderer::Renderer(Scene const& scene, unsigned int width, unsigned int height, 
 Organisiert die Pixel Farbgebung! */
 void Renderer::render()
 {
-  float distance = (-float(m_width))  / (2*tan(0.5*m_scene.camera.m_fov_x *M_PI / 180)); //krasser trigonometrischer kack zur Bestimmung der Bilddistanz // minus für neg. z Achse
+  float distance = (-float(m_width))  / (2*tan(0.5*m_scene.m_camera.m_fov_x *M_PI / 180)); //krasser trigonometrischer kack zur Bestimmung der Bilddistanz // minus für neg. z Achse
   float height = (-float(m_height)/2); 
   std::cout << "Distanz:     " << distance<<"\n";
 
   for (unsigned y = 0; y < m_height; ++y) {     //Horizontal
     float width = (-float(m_width)/2);
-    for (unsigned x = 0; x < m_width; ++x) {    //Vertikal
+    for (unsigned x = 0; x < m_width; ++x) {  
+      //Vertikal
       
       Pixel p(x,y);
-      Ray rayman {m_scene.camera.m_pos, glm::normalize(glm::vec3(width, height, distance))};
+      
+
+      Ray rayman {m_scene.m_camera.m_pos, glm::normalize(glm::vec3(width, height, distance))};
       std::cout << rayman.direction.x << "  " << rayman.direction.y << "  " << rayman.direction.z<<"\n";
-      p.color=givacolor(rayman);
+      
+      p.color=raytrace(rayman);
+      std::cout<<"Pixel Pinkler, aka PP hat wieder zugeschlagen!"<<"\n";
+
       write(p);
 
       width++;
+     
     }
     height++;
   }
@@ -83,44 +90,50 @@ void Renderer::write(Pixel const& p)
 }
 
 
- /*Fkt: givacolor
+ /*Fkt: Raytrace
 ######################################
 Ermittelt die Fabrbe! */
-Color Renderer::givacolor(Ray const& ray)
+Color Renderer::raytrace(Ray const& ray)
 {  
-  glm::mat4x4 transmat1(1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1);
-  glm::mat4x4 transmat2(1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1);
-  glm::mat4x4 transmat3(1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1);
-//#########################################################
-  Hit Hitze = ohit(transmat1, transmat2, transmat3, ray);
-//#########################################################
-  Hitze.m_intersection = transmat2 * transmat1 * transmat3 * glm::inverse(Hitze.m_intersection);
-  Hitze.m_normal = glm::inverse(transmat2) * transmat1 * glm::inverse(Hitze.m_normal);
+
+  //glm::mat4x4 transmat(1, 0, 0, 0, 0, 0.707106, -0.707106, 0, 0, 0.707106, 0.707106, 0, 0, 0, 0, 1);
+  glm::mat4x4 transmat(1, 0, 0, 0,
+                        0, 1, 0, 0,
+                        0, 0, 1, 0, 
+                        0, 0, 0, 1);
+
+  //Hit Hitze = ohit(transmat, ray);
+ 
+ 
   
-  sColor clr;
+  Hit Hitze = m_scene.m_composite->intersect(ray);
+  std::cout<<"Pixel Ltscher"<<"\n";
+  
+  Color clr;
   if(Hitze.m_hit==true) //Treffer?
   {
-    clr +=(m_scene.ambient*(Hitze.m_shape->material().ka)); //default Licht
-
-    for(auto& light : m_scene.lights) 
+    clr +=(m_scene.m_ambient*(Hitze.m_shape->material()->ka)); //default Licht
+    std::cout<<"Pixel Ltscher2"<<"\n";
+    for(auto& light : m_scene.m_lights) 
     {
       glm::vec3 direction=glm::normalize(light->m_point-Hitze.m_intersection);
-      glm::vec3 origin= Hitze.m_intersection+(Hitze.m_normal)*0.0001f; //Damit es sich nicht selbst trifft...
+      glm::vec3 origin= Hitze.m_intersection+(direction)*0.001f; //Damit es sich nicht selbst trifft...
       Ray raylight = Ray(origin,direction);
-      Hit LightObject = ohit(transmat1, transmat2, transmat3, raylight);
+
+      //Hit ShadowObject = ohit(transmat, raylight);
+      Hit ShadowObject = m_scene.m_composite->intersect(raylight);
+
       
       int distance= glm::length(Hitze.m_intersection-light->m_point); //distanz zwischen Licht und
       
-      if (LightObject.m_distance>distance) //Hier wird der Gegenstand direkt vom Licht getroffen.
+      if (ShadowObject.m_distance>distance) //Hier wird der Gegenstand direkt vom Licht getroffen.
       {
         float faktor=glm::dot(Hitze.m_normal, direction);
         if (faktor<0)  // wenn der Winkel des Lichteinfall unterhalb der Oberfläche selbst liegt,
         {
           faktor=0; // dann wird das Spatprodukt gleich null und es wird nichts zum Ambientlight addiert.
         }
-        //clr+=light->m_color * Hitze.m_shape->material().kd * faktor;
-        
-        
+            
         glm::vec3 v = glm::normalize(origin);
         glm::vec3 r(glm::normalize(glm::reflect(raylight.direction, Hitze.m_normal)));
 
@@ -130,12 +143,10 @@ Color Renderer::givacolor(Ray const& ray)
           rv = 0;
         }
 
-        float faktor2 = pow(rv,Hitze.m_shape->material().m);
+        float faktor2 = pow(rv,Hitze.m_shape->material()->m);
         
-        clr+= light->m_color*((Hitze.m_shape->material().kd * faktor)+
-                              Hitze.m_shape->material().ks* faktor2);
-
-
+        clr+= light->m_color*((Hitze.m_shape->material()->kd * faktor)+
+                              Hitze.m_shape->material()->ks* faktor2);
       }  
     // Hier kommt Reflekttion hin -> wie berechnet man Austrittswinkel aus normale?
     
@@ -143,7 +154,8 @@ Color Renderer::givacolor(Ray const& ray)
     return clr;
     
   }
-  clr+=m_scene.ambient;
+  clr+=m_scene.m_ambient;
+  std::cout<<"Lutscher"<<"\n";
   return clr;   
 }   
 
@@ -152,13 +164,18 @@ Color Renderer::givacolor(Ray const& ray)
 ######################################
 Gibt das durch einen Ray als erstes
 getroffene Objekt zurück! */
-Hit Renderer::ohit(glm::mat4x4 const& trans_mat1, glm::mat4x4 const& trans_mat2, glm::mat4x4 const& trans_mat3, Ray const& inray) const
+
+
+
+  
+Hit Renderer::ohit(glm::mat4x4 const& trans_mat, Ray const& ray) const
 { 
 
-  Ray ray = transformRay(trans_mat1, trans_mat2, trans_mat3, inray);
+  //Ray ray = transformRay(trans_mat, inray);
+
   Hit hit;
   Hit temphit;
-  for ( auto &i : m_scene.shapes )
+  for ( auto &i : m_scene.m_shapes )
   {
     temphit= i->intersect(ray);
     if(temphit.m_distance<hit.m_distance)
@@ -167,7 +184,7 @@ Hit Renderer::ohit(glm::mat4x4 const& trans_mat1, glm::mat4x4 const& trans_mat2,
       std::cout<<"hit\n";
     }
   } 
-  std::cout << "hat er was nicht getroffen?" << "\n";
+  std::cout << ray.direction.z << "\n";
   return hit;
 }
 
@@ -176,7 +193,7 @@ Hit Renderer::ohit(Ray const& ray) const
 {
   Hit hit;
   Hit temphit;
-  for ( auto &i : m_scene.shapes )
+  for ( auto &i : m_scene.m_shapes )
   {
     temphit= i->intersect(ray);
     if(temphit.m_distance<hit.m_distance)
