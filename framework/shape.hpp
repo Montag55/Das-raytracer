@@ -29,7 +29,13 @@ public:
 	virtual std::ostream& print(std::ostream& os) const;
 
 	virtual Hit intersect(Ray const& ray) const = 0;
-	
+
+	//#####################################################
+	glm::mat4x4 const& transformation_matrix() const;
+
+	void transformation_matrix(glm::mat4x4 const& trans_mat);
+	//#####################################################
+
 private:
 	std::string name_;
 	Material material_;

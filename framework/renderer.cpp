@@ -29,7 +29,7 @@ void Renderer::render()
     for (unsigned x = 0; x < m_width; ++x) {    //Vertikal
       
       Pixel p(x,y);
-      Ray rayman {{0,0,0}, glm::normalize(glm::vec3(width, height, distance))};
+      Ray rayman {m_scene.camera.m_pos, glm::normalize(glm::vec3(width, height, distance))};
       std::cout << rayman.direction.x << "  " << rayman.direction.y << "  " << rayman.direction.z<<"\n";
       p.color=givacolor(rayman);
       write(p);
@@ -88,9 +88,16 @@ void Renderer::write(Pixel const& p)
 Ermittelt die Fabrbe! */
 Color Renderer::givacolor(Ray const& ray)
 {  
-  glm::mat4x4 transmat(2, 0, 0, 0, 0, 0.707106, -0.707106, 0, 0, 0.707106, 0.707106, 0, 0, 0, 0, 1);
-  Hit Hitze = ohit(transmat, ray);
-  Color clr;
+  glm::mat4x4 transmat1(1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1);
+  glm::mat4x4 transmat2(1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1);
+  glm::mat4x4 transmat3(1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1);
+//#########################################################
+  Hit Hitze = ohit(transmat1, transmat2, transmat3, ray);
+//#########################################################
+  Hitze.m_intersection = transmat2 * transmat1 * transmat3 * glm::inverse(Hitze.m_intersection);
+  Hitze.m_normal = glm::inverse(transmat2) * transmat1 * glm::inverse(Hitze.m_normal);
+  
+  sColor clr;
   if(Hitze.m_hit==true) //Treffer?
   {
     clr +=(m_scene.ambient*(Hitze.m_shape->material().ka)); //default Licht
@@ -100,7 +107,7 @@ Color Renderer::givacolor(Ray const& ray)
       glm::vec3 direction=glm::normalize(light->m_point-Hitze.m_intersection);
       glm::vec3 origin= Hitze.m_intersection+(Hitze.m_normal)*0.0001f; //Damit es sich nicht selbst trifft...
       Ray raylight = Ray(origin,direction);
-      Hit LightObject = ohit(transmat, raylight);
+      Hit LightObject = ohit(transmat1, transmat2, transmat3, raylight);
       
       int distance= glm::length(Hitze.m_intersection-light->m_point); //distanz zwischen Licht und
       
@@ -145,10 +152,10 @@ Color Renderer::givacolor(Ray const& ray)
 ######################################
 Gibt das durch einen Ray als erstes
 getroffene Objekt zurück! */
-Hit Renderer::ohit(glm::mat4x4 const& trans_mat, Ray const& inray) const
+Hit Renderer::ohit(glm::mat4x4 const& trans_mat1, glm::mat4x4 const& trans_mat2, glm::mat4x4 const& trans_mat3, Ray const& inray) const
 { 
 
-  Ray ray = transformRay(trans_mat, inray);
+  Ray ray = transformRay(trans_mat1, trans_mat2, trans_mat3, inray);
   Hit hit;
   Hit temphit;
   for ( auto &i : m_scene.shapes )

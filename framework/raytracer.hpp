@@ -26,4 +26,6 @@ private:
 
 };
 
-#endif // BUW_BOX_HPP
+#endif // BUW_BOX_HPPtrans_mat_inv3 * trans_mat_inv3 * 
+
+

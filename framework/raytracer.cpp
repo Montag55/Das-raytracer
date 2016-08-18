@@ -69,7 +69,7 @@
        if(has_suffix(entry->d_name, ".txt"))  // ".txt"?
         { //Ablauf für eine SDF-Datei:
           std::cout << "<Datei: " << count << std::endl; 
-          std::string filepath= std::string(".")+std::string(m_in)+"/"+entry->d_name;
+          std::string filepath= std::string(m_in)+"/"+entry->d_name;
           std::cout << "-SDFLoader:" << filepath << std::endl;
           Scene scene = SDFLoader::load(filepath); 
           

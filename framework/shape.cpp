@@ -12,8 +12,8 @@ Shape::Shape():
         1, 0, 0, 0,
         0, 1, 0, 0,
         0, 0, 1, 0,
-        0, 0, 0, 1   
-    }}{}
+        0, 0, 0, 1}}
+    {}
     //{std::cout<< "Shape constructed" << "\n";}
 
 Shape::Shape(std::string const& name, Material const& mtrl):
@@ -26,8 +26,7 @@ Shape::Shape(std::string const& name, Material const& mtrl):
     world_transformation_inv_{glm::mat4x4 {1, 0, 0, 0,
                                            0, 1, 0, 0,
                                            0, 0, 1, 0,
-                                           0, 0, 0, 1
-                                          }}
+                                           0, 0, 0, 1}}
     {} 
     //{std::cout<< "Shape constructed" << "\n";}
 
@@ -39,9 +38,9 @@ Shape::Shape(std::string const& name, Material const& mtrl):
                                       0, 0, 1, 0,
                                       0, 0, 0, 1}},
     world_transformation_inv_{glm::mat4x4 {1, 0, 0, 0,
-                                      0, 1, 0, 0,
-                                      0, 0, 1, 0,
-                                      0, 0, 0, 1}}
+                                          0, 1, 0, 0,
+                                          0, 0, 1, 0,
+                                          0, 0, 0, 1}}
     {} 
     //{std::cout<< "Shape constructed" << "\n";}
 
@@ -72,3 +71,13 @@ std::string const& Shape::name() const
 {
   return name_;
 }
+
+//###########################################################
+glm::mat4x4 const& Shape::transformation_matrix() const {
+    return world_transformation_;
+}
+
+void Shape::transformation_matrix(glm::mat4x4 const& trans_mat) {
+    world_transformation_ = trans_mat;
+}
+//###########################################################

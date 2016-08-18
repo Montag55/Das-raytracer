@@ -1,6 +1,6 @@
 define material red 1 0 0 1 0 0 1 0 0 1
 #
-define shape box rtop -10 -10 40  20 20 60 red
+define shape box rtop -10 50 40  20 60 50 red
 #
 define shape sphere bsphere 0 0 -20 5 red
 define light diffuse sun1 0 0 -1 1 1 1
