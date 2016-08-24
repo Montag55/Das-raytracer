@@ -66,12 +66,13 @@ Hit Box::intersect(Ray ray) const
 {
 
     Hit boxhit;
-
+    std::cout<< "huhu boxhit\n";
+/*
     if (transf())
     {
         ray = transformRay(world_transformation_inv(), ray);
     }
-
+*/
     double t1 = (m_min.x - ray.origin.x)*ray.inv_direction.x;
     double t2 = (m_max.x - ray.origin.x)*ray.inv_direction.x;
     double tmin = std::min(t1, t2);
@@ -92,10 +93,10 @@ Hit Box::intersect(Ray ray) const
     if (tmax > std::max(0.0, tmin))
     {   
         boxhit.m_hit = true;
-        boxhit.m_distance = glm::length(boxhit.m_intersection-ray.origin);
-
+        std::cout<< "Boxhit distance: " << boxhit.m_distance<< boxhit.m_hit<< "\n";;
         boxhit.m_shape = this;
         boxhit.m_intersection = glm::vec3{tmin*ray.direction.x, tmin*ray.direction.y, tmin*ray.direction.z};
+        boxhit.m_distance = glm::length(boxhit.m_intersection-ray.origin);
 
         
 
