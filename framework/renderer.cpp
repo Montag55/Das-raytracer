@@ -34,10 +34,10 @@ void Renderer::render()
 
       Ray rayman {m_scene.m_camera.m_pos, glm::normalize(glm::vec3(width, height, distance))};
       std::cout << rayman.direction.x << "  " << rayman.direction.y << "  " << rayman.direction.z<<"\n";
-      
-      p.color.r= m_scene.m_A*pow(raytrace(rayman).r, m_scene.m_gamma); //kontrastanpassung
-      p.color.g= m_scene.m_A*pow(raytrace(rayman).g, m_scene.m_gamma); //kontrastanpassung
-      p.color.b= m_scene.m_A*pow(raytrace(rayman).b, m_scene.m_gamma); //kontrastanpassung
+      auto tempcolor = raytrace(rayman);
+      p.color.r= m_scene.m_A*pow(tempcolor.r, m_scene.m_gamma); //kontrastanpassung
+      p.color.g= m_scene.m_A*pow(tempcolor.g, m_scene.m_gamma); //kontrastanpassung
+      p.color.b= m_scene.m_A*pow(tempcolor.b, m_scene.m_gamma); //kontrastanpassung
       
 
       write(p);
