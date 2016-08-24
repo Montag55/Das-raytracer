@@ -165,7 +165,7 @@ Scene SDFLoader::load(std::string const& inpath)
                         ss >> compname;
                         std::cout<< "Objekt\n";
                         std::cout<< compname;
-                        std::cout<< "Nr.1"<< compname << "\n";
+                       
                         scene.m_composite= std::make_shared<Composite>(compname);
                         
 
@@ -173,11 +173,11 @@ Scene SDFLoader::load(std::string const& inpath)
                         {	
 
                             ss>>shapename;
-                            std::cout<< "Nr.1" <<shapename << "\n";
+                            
                             auto search = tmpcomp.find(shapename);
                             if(search != tmpcomp.end()) 
                             {	
-                                std::cout<< "Katzenklo\n";
+                                
                             	std::shared_ptr<Shape> tempshape = search->second;
                                 scene.m_composite->add(tempshape);
                             }   

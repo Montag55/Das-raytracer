@@ -28,7 +28,6 @@ Hit Composite::intersect(Ray ray) const
 	Hit temphit;
 	for( auto &i : m_shapes)
 	{
-		std::cout<< "get back too da choppa!" << "\n";
 	  temphit= i->intersect(ray);
 	  if(temphit.m_distance<hit.m_distance)
 	  {

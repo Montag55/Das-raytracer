@@ -36,7 +36,7 @@ void Renderer::render()
       std::cout << rayman.direction.x << "  " << rayman.direction.y << "  " << rayman.direction.z<<"\n";
       
       p.color=raytrace(rayman);
-      std::cout<<"Pixel Pinkler, aka PP hat wieder zugeschlagen!"<<"\n";
+      
 
       write(p);
 
@@ -107,13 +107,13 @@ Color Renderer::raytrace(Ray const& ray)
  
   
   Hit Hitze = m_scene.m_composite->intersect(ray);
-  std::cout<<"Pixel Ltscher"<<"\n";
+
   
   Color clr;
   if(Hitze.m_hit==true) //Treffer?
   {
     clr +=(m_scene.m_ambient*(Hitze.m_shape->material()->ka)); //default Licht
-    std::cout<<"Pixel Ltscher2"<<"\n";
+    
     for(auto& light : m_scene.m_lights) 
     {
       glm::vec3 direction=glm::normalize(light->m_point-Hitze.m_intersection);
@@ -155,7 +155,7 @@ Color Renderer::raytrace(Ray const& ray)
     
   }
   clr+=m_scene.m_ambient;
-  std::cout<<"Lutscher"<<"\n";
+  
   return clr;   
 }   
 
