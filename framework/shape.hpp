@@ -33,6 +33,7 @@ public:
 	bool const& transf() const;
 	glm::mat4x4 const& world_transformation() const;
 	glm::mat4x4 const& world_transformation_inv() const;
+	glm::mat4x4 const& world_transformation_inv_transp() const;
 	/*
 	virtual float area() const = 0;
 	virtual float volume() const = 0;
@@ -55,6 +56,7 @@ private:
 	std::shared_ptr<Material> material_;
 	glm::mat4x4 world_transformation_;
 	glm::mat4x4 world_transformation_inv_;
+	glm::mat4x4 world_transformation_inv_transp_;
 	bool m_transf;
 
 

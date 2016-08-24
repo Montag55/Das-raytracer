@@ -19,16 +19,16 @@ struct Ray
 		inv_direction{glm::vec3{1.0/dir.x, 1.0/dir.y, 1.0/dir.z}}
 		{}
     //###################################################################
-	friend Ray transformRay(glm::mat4x4 const& trans_mat, Ray const& ray)
+	friend Ray transformRay(glm::mat4x4 const& trans_mat_inv, Ray const& ray)
 	{	
-		glm::mat4x4 trans_mat_inv = glm::inverse(trans_mat);
+		//glm::mat4x4 trans_mat_inv = glm::inverse(trans_mat);
 		Ray newray;
 		glm::vec3 origin(trans_mat_inv*glm::vec4(ray.origin, 1));
-		glm::vec3 direction(trans_mat_inv * glm::vec4(ray.direction, 1));
-		glm::vec3 inv_direction(trans_mat_inv * glm::vec4(ray.inv_direction, 1));
+		glm::vec3 direction(trans_mat_inv * glm::vec4(ray.direction, 0));
+		glm::vec3 inv_direction(trans_mat_inv * glm::vec4(ray.inv_direction, 0));
 
 		newray.origin = origin;
-		newray.direction = direction;
+		newray.direction =direction;
 		newray.inv_direction = inv_direction;
 		return newray;
 	}
