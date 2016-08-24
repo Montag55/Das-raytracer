@@ -35,6 +35,7 @@ Hit Composite::intersect(Ray ray) const
 	  }
 	} 
 	return hit;
+
 }
 
 void Composite::add(shape_pointer const& shape)
@@ -47,6 +48,7 @@ void Composite::set_name(std::string const name)
     std::cout<< "setname" << "\n";
     std::cout<< name << "\n";
     m_name = name;
+
  
     
 } 

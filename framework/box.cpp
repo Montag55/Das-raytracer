@@ -69,7 +69,7 @@ Hit Box::intersect(Ray ray) const
 
     if (transf())
     {
-        ray = transformRay(world_transformation_inv(), ray);
+        ray = transformRay(world_transformation(), ray);
     }
 
     double t1 = (m_min.x - ray.origin.x)*ray.inv_direction.x;
@@ -92,11 +92,11 @@ Hit Box::intersect(Ray ray) const
     if (tmax > std::max(0.0, tmin))
     {   
         boxhit.m_hit = true;
-        boxhit.m_distance = glm::length(boxhit.m_intersection-ray.origin);
+        
 
         boxhit.m_shape = this;
         boxhit.m_intersection = glm::vec3{tmin*ray.direction.x, tmin*ray.direction.y, tmin*ray.direction.z};
-
+        boxhit.m_distance = glm::length(boxhit.m_intersection-ray.origin);
         
 
         if((boxhit.m_intersection.x) == Approx(m_min.x))
