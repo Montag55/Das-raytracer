@@ -107,12 +107,11 @@ void Shape::scale(glm::vec3 const& vec)
 
 void Shape::rotate(float angle, glm::vec3 const& vec)
     {
-
+      angle = angle* 0.017453292519943f; //grad in rad
       world_transformation_ = glm::rotate(glm::mat4(), angle, vec) * world_transformation_;
       world_transformation_inv_ = glm::rotate(glm::mat4(), -angle, vec) * world_transformation_inv_;
       world_transformation_inv_transp_ = glm::transpose(glm::mat4(world_transformation_inv_));
       m_transf=true;
-
     }
 
 void Shape::translate(glm::vec3 const& vec)
