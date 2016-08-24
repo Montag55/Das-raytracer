@@ -15,6 +15,9 @@ struct Scene
 		//Lichter
 		std::vector <std::shared_ptr<Light>> m_lights;
 		Color m_ambient;
+		//Kontrast
+		float m_A = 0.9f;
+		float m_gamma = 0.5f;
 		//Shapes
 		std::shared_ptr<Composite> m_composite; 
 		std::vector <std::shared_ptr<Shape>> m_shapes;

@@ -35,7 +35,9 @@ void Renderer::render()
       Ray rayman {m_scene.m_camera.m_pos, glm::normalize(glm::vec3(width, height, distance))};
       std::cout << rayman.direction.x << "  " << rayman.direction.y << "  " << rayman.direction.z<<"\n";
       
-      p.color=raytrace(rayman);
+      p.color.r= m_scene.m_A*pow(raytrace(rayman).r, m_scene.m_gamma); //kontrastanpassung
+      p.color.g= m_scene.m_A*pow(raytrace(rayman).g, m_scene.m_gamma); //kontrastanpassung
+      p.color.b= m_scene.m_A*pow(raytrace(rayman).b, m_scene.m_gamma); //kontrastanpassung
       
 
       write(p);
@@ -117,7 +119,7 @@ Color Renderer::raytrace(Ray const& ray)
     for(auto& light : m_scene.m_lights) 
     {
       glm::vec3 direction=glm::normalize(light->m_point-Hitze.m_intersection);
-      glm::vec3 origin= Hitze.m_intersection+(direction)*0.001f; //Damit es sich nicht selbst trifft...
+      glm::vec3 origin= Hitze.m_intersection+(direction)*0.0001f; //Damit es sich nicht selbst trifft...
       Ray raylight = Ray(origin,direction);
 
       //Hit ShadowObject = ohit(transmat, raylight);

@@ -67,6 +67,7 @@ Scene SDFLoader::load(std::string const& inpath)
                         shape->second->translate(glm::vec3(x,y,z));
                     }
                 }
+
             }else if (firstWord=="define")
             {   
                 std::cout << "Definiere: ";
@@ -102,7 +103,12 @@ Scene SDFLoader::load(std::string const& inpath)
                     //Einspeichern
                     std::shared_ptr<Material> material=std::make_shared<Material>(matname, ka, kd, ks, faktor);
                     scene.m_materials.insert(std::pair<std::string, std::shared_ptr<Material>>(matname, material));
-                }           
+                }  
+                else if(firstWord == "tonemap")
+                {
+                    ss >> scene.m_A;
+                    ss >> scene.m_gamma;
+                }    
                 else if(firstWord == "shape")//##############-Shape
                 {
                     ss>>firstWord;
