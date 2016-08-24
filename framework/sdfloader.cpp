@@ -110,7 +110,7 @@ Scene SDFLoader::load(std::string const& inpath)
 
                     if(firstWord == "box") //##############-Box
                     {   
-                        std::cout << "Box\n";
+                        std::cout << "Box:\n";
                         std::string boxname;
                         glm::vec3 min;
                         glm::vec3 max;
@@ -133,7 +133,6 @@ Scene SDFLoader::load(std::string const& inpath)
                         shape_pointer box= std::make_shared<Box>(boxname, material, min, max);
                         tmpcomp.insert(std::pair<std::string, shape_pointer>(box->name(), box));
                         
-
                     }else if(firstWord == "sphere") //##############-Sphere
                     {   
                         std::cout << "Sphere\n";
