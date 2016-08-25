@@ -3,7 +3,7 @@
 #include "camera.hpp"
 
 Camera::Camera():
-m_pos{glm::vec3{ 0, 0, 20 }},
+m_pos{glm::vec3{ 0, 0, 0 }},
 m_dir{glm::vec3{ 0, 0, 1 }},
 m_up{glm::vec3{ 0, 1, 0 }},
 m_fov_x{45.0},
