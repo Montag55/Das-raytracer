@@ -236,8 +236,21 @@ Scene SDFLoader::load(std::string const& inpath)
                     }
                 }else if(firstWord == "camera")//##############-Camera
                 {
+                   
                     ss >> scene.m_camera.m_name;
                     ss >> scene.m_camera.m_fov_x;
+
+                    ss >> scene.m_camera.m_pos.x;
+                    ss >> scene.m_camera.m_pos.y;
+                    ss >> scene.m_camera.m_pos.z;
+
+                    ss >> scene.m_camera.m_dir.x;
+                    ss >> scene.m_camera.m_dir.y;
+                    ss >> scene.m_camera.m_dir.z;
+
+                    ss >> scene.m_camera.m_up.x;
+                    ss >> scene.m_camera.m_up.y;
+                    ss >> scene.m_camera.m_up.z;
                 }
             }
         }
