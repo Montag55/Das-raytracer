@@ -25,7 +25,8 @@ struct Ray
 		Ray newray;
 		glm::vec3 origin(trans_mat_inv*glm::vec4(ray.origin, 1));
 		glm::vec3 direction(trans_mat_inv * glm::vec4(ray.direction, 0));
-		glm::vec3 inv_direction(trans_mat_inv * glm::vec4(ray.inv_direction, 0));
+		glm::vec3 inv_direction(glm::vec3{1.0/direction.x, 1.0/direction.y, 1.0/direction.z});
+		//(trans_mat_inv * glm::vec4(ray.inv_direction, 0));
 
 		newray.origin = origin;
 		newray.direction =direction;

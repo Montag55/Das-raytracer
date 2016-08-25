@@ -66,13 +66,11 @@ Hit Box::intersect(Ray ray) const
 {
 
     Hit boxhit;
-    std::cout<< "huhu boxhit\n";
 
     if (transf())
     {
 
-      ray =  transformRay(world_transformation_inv(), ray);
-
+        ray =  transformRay(world_transformation_inv(), ray);
 
     }
 
@@ -96,13 +94,11 @@ Hit Box::intersect(Ray ray) const
     if (tmax > std::max(0.0, tmin))
     {    
         
-        boxhit.m_intersection = glm::vec3{tmin*ray.direction.x, tmin*ray.direction.y, tmin*ray.direction.z};
+        boxhit.m_intersection = glm::vec3{tmin*ray.direction.x + ray.origin.x, tmin*ray.direction.y  + ray.origin.y, tmin*ray.direction.z + ray.origin.z};
         boxhit.m_hit = true;
 
         boxhit.m_shape = this;
         boxhit.m_distance = glm::length(boxhit.m_intersection-ray.origin);
-        std::cout<< "Boxhit distance: " << boxhit.m_distance<< "   "<< boxhit.m_hit<< "\n";;
-
 
         
 
@@ -135,12 +131,18 @@ Hit Box::intersect(Ray ray) const
             {
                 boxhit.m_normal = glm::vec3{0, 0, 1};
             }
-    }    
 
-    if (transf()){
+        
+        if (transf()){
+
             boxhit.m_intersection= glm::vec3(world_transformation()* glm::vec4(boxhit.m_intersection, 1));
             boxhit.m_normal= glm::normalize(glm::vec3(world_transformation_inv_transp()* glm::vec4(boxhit.m_normal, 0)));
         }
+    }    
+   
+
+             std::cout<< "Boxhit normal danach: " << boxhit.m_normal.x<< "   "<< boxhit.m_hit<< "\n";;
+
     return boxhit;
 
 }

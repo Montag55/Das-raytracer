@@ -97,17 +97,6 @@ void Renderer::write(Pixel const& p)
 Ermittelt die Fabrbe! */
 Color Renderer::raytrace(Ray const& ray)
 {  
-
-  //glm::mat4x4 transmat(1, 0, 0, 0, 0, 0.707106, -0.707106, 0, 0, 0.707106, 0.707106, 0, 0, 0, 0, 1);
-  glm::mat4x4 transmat(1, 0, 0, 0,
-                        0, 1, 0, 0,
-                        0, 0, 1, 0, 
-                        0, 0, 0, 1);
-
-  //Hit Hitze = ohit(transmat, ray);
- 
- 
-  
   Hit Hitze = m_scene.m_composite->intersect(ray);
 
   
