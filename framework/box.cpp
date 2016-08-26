@@ -140,7 +140,7 @@ Hit Box::intersect(Ray  ray) const
         if (transf()){
 
             boxhit.m_intersection = glm::vec3(world_transformation_inv()* glm::vec4(boxhit.m_intersection, 1));
-            boxhit.m_normal = glm::normalize(glm::vec3(glm::mat3(world_transformation_inv_transp())* boxhit.m_normal));
+            boxhit.m_normal = glm::vec3(glm::mat3(world_transformation_inv_transp())* boxhit.m_normal);
         }
 
         boxhit.m_distance = glm::length(boxhit.m_intersection-ray.origin);

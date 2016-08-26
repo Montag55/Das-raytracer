@@ -115,18 +115,20 @@ Color Renderer::raytrace(Ray const& ray)
       Hit ShadowObject = m_scene.m_composite->intersect(raylight);
 
       
-      int distance= glm::length(Hitze.m_intersection-light->m_point); //distanz zwischen Licht und
+      float distance= glm::length(Hitze.m_intersection-light->m_point); //distanz zwischen Licht und
       
       if (ShadowObject.m_distance>distance) //Hier wird der Gegenstand direkt vom Licht getroffen.
       {
+        
         float faktor=glm::dot(Hitze.m_normal, direction);
         if (faktor<0)  // wenn der Winkel des Lichteinfall unterhalb der Oberfläche selbst liegt,
         {
           faktor=0; // dann wird das Spatprodukt gleich null und es wird nichts zum Ambientlight addiert.
         }
             
-        glm::vec3 v = glm::normalize(origin);
-        glm::vec3 r(glm::normalize(glm::reflect(raylight.direction, Hitze.m_normal)));
+        //glm::vec3 v = glm::normalize(origin); 
+        glm::vec3 v = glm::normalize(Hitze.m_intersection - ray.direction);
+        glm::vec3 r (glm::normalize(glm::reflect(raylight.direction, Hitze.m_normal)));
 
         float rv = glm::dot(r, v);
         if(rv<0)
@@ -134,7 +136,7 @@ Color Renderer::raytrace(Ray const& ray)
           rv = 0;
         }
 
-        float faktor2 = pow(rv,Hitze.m_shape->material()->m);
+        float faktor2 = pow(rv, Hitze.m_shape->material()->m);
         
         clr+= light->m_color*((Hitze.m_shape->material()->kd * faktor)+
                               Hitze.m_shape->material()->ks* faktor2);
