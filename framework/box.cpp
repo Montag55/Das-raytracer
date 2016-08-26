@@ -62,13 +62,14 @@ float Box::area() const
 }
 */
 
-Hit Box::intersect(Ray ray) const
+Hit Box::intersect(Ray  ray) const
 {
 
     Hit boxhit;
     
     if (transf())
     {
+        //Ray newray = transformRay(transformRay(world_transformation_inv(), ray));
         ray =  transformRay(world_transformation_inv(), ray);
     }
     
@@ -138,7 +139,7 @@ Hit Box::intersect(Ray ray) const
         
         if (transf()){
 
-            boxhit.m_intersection = glm::vec3(world_transformation()* glm::vec4(boxhit.m_intersection, 1));
+            boxhit.m_intersection = glm::vec3(world_transformation_inv()* glm::vec4(boxhit.m_intersection, 1));
             boxhit.m_normal = glm::normalize(glm::vec3(glm::mat3(world_transformation_inv_transp())* boxhit.m_normal));
         }
 
