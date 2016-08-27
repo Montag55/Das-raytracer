@@ -62,16 +62,18 @@ float Box::area() const
 }
 */
 
-Hit Box::intersect(Ray  ray) const
+Hit Box::intersect(Ray const& inray) const
 {
 
     Hit boxhit;
-    
+    Ray ray;
     if (transf())
     {
         //Ray newray = transformRay(transformRay(world_transformation_inv(), ray));
-        ray =  transformRay(world_transformation_inv(), ray);
+        ray =  transformRay(world_transformation_inv(), inray);
     }
+    else
+        ray = inray;
     
     double t1 = (m_min.x - ray.origin.x)*ray.inv_direction.x;
     double t2 = (m_max.x - ray.origin.x)*ray.inv_direction.x;
@@ -89,7 +91,6 @@ Hit Box::intersect(Ray  ray) const
     tmax = std::min(tmax, std::max(t1, t2));
 
 
-
     if (tmax > std::max(0.0, tmin))
     {    
         
@@ -103,7 +104,7 @@ Hit Box::intersect(Ray  ray) const
         boxhit.m_shape = this;
         
 
-        std::cout<< "Boxhit min, box min: " << boxhit.m_intersection.x<< "   "<<m_min.x<< "\n";
+        std::cout<< "Boxhit min, box min: " << boxhit.m_intersection.z<< "   "<<m_min.z<< "\n";
         
 
         if((boxhit.m_intersection.x) == Approx(m_min.x))
@@ -128,18 +129,18 @@ Hit Box::intersect(Ray  ray) const
 
         else if((boxhit.m_intersection.z) == Approx(m_min.z))
             {
-                boxhit.m_normal = glm::vec3{0, 0, -1};
+                boxhit.m_normal = glm::vec3{0, 0, 1};
             }
 
         else if((boxhit.m_intersection.z) == Approx(m_max.z))
             {
-                boxhit.m_normal = glm::vec3{0, 0, 1};
+                boxhit.m_normal = glm::vec3{0, 0, -1};
             }
 
         
         if (transf()){
 
-            boxhit.m_intersection = glm::vec3(world_transformation_inv()* glm::vec4(boxhit.m_intersection, 1));
+            boxhit.m_intersection = glm::vec3(glm::transpose(world_transformation())* glm::vec4(boxhit.m_intersection, 1));
             boxhit.m_normal = glm::vec3(glm::mat3(world_transformation_inv_transp())* boxhit.m_normal);
         }
 

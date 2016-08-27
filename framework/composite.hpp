@@ -20,7 +20,7 @@ class Composite : public Shape
     ~Composite();
 
     //FUNKTIONEN-------------------------------------------------------------------------
-    Hit intersect(Ray ray) const override;
+    Hit intersect(Ray const& inray) const override;
     /*
     void translate(glm::vec3 const& distance) override;
     void rotate(double angle, glm::vec3 const& point) override;

@@ -31,7 +31,7 @@ public:
 	*/
 	 std::ostream& print(std::ostream& os) const override;
 
-	 Hit intersect(Ray ray) const override; //Zu Hit geändert: infos auch über Schnittpunkt, statt Bool.
+	 Hit intersect(Ray const& inray) const override; //Zu Hit geändert: infos auch über Schnittpunkt, statt Bool.
 
 
 private:

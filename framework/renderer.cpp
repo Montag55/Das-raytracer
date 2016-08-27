@@ -33,7 +33,7 @@ void Renderer::render()
       
 
       Ray rayman {m_scene.m_camera.m_pos, glm::normalize(glm::vec3(width, height, distance))};
-      std::cout << rayman.direction.x << "  " << rayman.direction.y << "  " << rayman.direction.z<<"\n";
+      //std::cout << rayman.direction.x << "  " << rayman.direction.y << "  " << rayman.direction.z<<"\n";
       auto tempcolor = raytrace(rayman);
       p.color.r= m_scene.m_A*pow(tempcolor.r, m_scene.m_gamma); //kontrastanpassung
       p.color.g= m_scene.m_A*pow(tempcolor.g, m_scene.m_gamma); //kontrastanpassung
@@ -101,42 +101,54 @@ Color Renderer::raytrace(Ray const& ray)
 
   
   Color clr;
+ 
+ /* clr.r = Hitze.m_normal.x;
+  clr.g = Hitze.m_normal.y;   //Normalenüberprüfung :)
+  clr.b = Hitze.m_normal.z;
+
+  */
+
   if(Hitze.m_hit==true) //Treffer?
   {
     clr +=(m_scene.m_ambient*(Hitze.m_shape->material()->ka)); //default Licht
     
     for(auto& light : m_scene.m_lights) 
     {
-      glm::vec3 direction=glm::normalize(light->m_point-Hitze.m_intersection);
-      glm::vec3 origin= Hitze.m_intersection+(direction)*0.001f; //Damit es sich nicht selbst trifft...
-      Ray raylight = Ray(origin,direction);
+      glm::vec3 light_direction=glm::normalize(light->m_point-Hitze.m_intersection);
+      glm::vec3 light_origin= Hitze.m_intersection+(light_direction)*0.001f; //Damit es sich nicht selbst trifft...
+      Ray raylight = Ray(light_origin,light_direction);
 
       //Hit ShadowObject = ohit(transmat, raylight);
       Hit ShadowObject = m_scene.m_composite->intersect(raylight);
 
       
       float distance= glm::length(Hitze.m_intersection-light->m_point); //distanz zwischen Licht und
-      
+              std::cout << "Position:  "<< Hitze.m_intersection.x << "Position:  "<<Hitze.m_intersection.y << "Position:  "<<Hitze.m_intersection.z << "\n";
+
       if (ShadowObject.m_distance>distance) //Hier wird der Gegenstand direkt vom Licht getroffen.
       {
         
-        float faktor=glm::dot(Hitze.m_normal, direction);
+        float faktor=(glm::dot(light_direction, Hitze.m_normal));
+        std::cout << "Normale:  "<< Hitze.m_normal.x << "Normale:  "<< Hitze.m_normal.y<< "Normale:  " << Hitze.m_normal.z << "\n";
+        std::cout << "Faktor:  "<< faktor << "\n";
+        
         if (faktor<0)  // wenn der Winkel des Lichteinfall unterhalb der Oberfläche selbst liegt,
         {
           faktor=0; // dann wird das Spatprodukt gleich null und es wird nichts zum Ambientlight addiert.
         }
-            
-        //glm::vec3 v = glm::normalize(origin); 
+        
+        //glm::vec3 v = glm::normalize(light_origin); 
         glm::vec3 v = glm::normalize(Hitze.m_intersection - ray.direction);
         glm::vec3 r (glm::normalize(glm::reflect(raylight.direction, Hitze.m_normal)));
 
-        float rv = glm::dot(r, v);
+        float rv = (glm::dot(r, v));
+        std::cout << "Faktor 2:  "<< rv << "   "<< v.x << "\n";
         if(rv<0)
         {
           rv = 0;
         }
 
-        float faktor2 = pow(rv, Hitze.m_shape->material()->m);
+        float faktor2 = (pow(rv, Hitze.m_shape->material()->m));
         
         clr+= light->m_color*((Hitze.m_shape->material()->kd * faktor)+
                               Hitze.m_shape->material()->ks* faktor2);

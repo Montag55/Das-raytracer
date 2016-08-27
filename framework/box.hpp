@@ -27,7 +27,7 @@ public:
 
 	 std::ostream& print(std::ostream& os) const override;
 
-	 Hit intersect(Ray ray) const;
+	 Hit intersect(Ray const& inray) const;
 
 private:
 	glm::vec3 m_min;

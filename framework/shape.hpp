@@ -44,7 +44,7 @@ public:
 
 	//Funktionen
 	virtual std::ostream& print(std::ostream& os) const;
-	virtual Hit intersect(Ray ray) const = 0;
+	virtual Hit intersect(Ray const& inray) const = 0;
 	virtual void scale(glm::vec3 const& vec);
 	virtual void rotate(float angle, glm::vec3 const& vec);
 	virtual void translate(glm::vec3 const& vec);

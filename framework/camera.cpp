@@ -4,7 +4,7 @@
 
 Camera::Camera():
 m_pos{glm::vec3{ 0, 0, 0 }},
-m_dir{glm::vec3{ 0, 0, 1 }},
+m_dir{glm::vec3{ 0, 0, -1 }},
 m_up{glm::vec3{ 0, 1, 0 }},
 m_fov_x{45.0},
 m_name{"Default Camera"} {}
@@ -14,7 +14,7 @@ Camera::Camera(
     double fov_x, std::string const& name
 ):
 m_pos{position},
-m_dir{dir},
+m_dir{ 0, 0, -1 },
 m_up{up},
 m_fov_x{fov_x},
 m_name{name} {}

@@ -22,13 +22,13 @@ void Composite::add(std::shared_ptr<Shape> shape) const
 }
 */
 
-Hit Composite::intersect(Ray ray) const
+Hit Composite::intersect(Ray const& inray) const
 {
 	Hit hit;
 	Hit temphit;
 	for( auto &i : m_shapes)
 	{
-	  temphit= i->intersect(ray);
+	  temphit= i->intersect(inray);
 	  if(temphit.m_distance<hit.m_distance)
 	  {
 	    hit = temphit;

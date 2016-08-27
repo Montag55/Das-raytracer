@@ -61,9 +61,17 @@ float Sphere::area() const
 		return 4.0f* M_PI * m_radius * m_radius;
 	}
 */
-Hit Sphere::intersect(Ray ray) const
+Hit Sphere::intersect(Ray const& inray) const
 	{
 		Hit spherehit;
+		Ray ray;
+		if (transf())
+    	{
+        //Ray newray = transformRay(transformRay(world_transformation_inv(), ray));
+        	ray =  transformRay(world_transformation_inv(), inray);
+    	}
+    	else
+    		ray = inray;
 
 		spherehit.m_hit = glm::intersectRaySphere(ray.origin, ray.direction,
 			m_center, m_radius, spherehit.m_intersection, spherehit.m_normal);
@@ -71,6 +79,12 @@ Hit Sphere::intersect(Ray ray) const
 		std::cout<< "Spherehit at: " <<spherehit.m_intersection.x  << ", "
 	    << spherehit.m_intersection.y  << ", "<< spherehit.m_intersection.z << "\n";
 	    
+        if (transf()){
+
+            spherehit.m_intersection = glm::vec3(world_transformation()* glm::vec4(spherehit.m_intersection, 1));
+            spherehit.m_normal = glm::vec3(glm::mat3(world_transformation_inv_transp())* spherehit.m_normal);
+        }
+
 		if (spherehit.m_hit)
 		{
 			spherehit.m_distance = glm::distance(ray.origin, spherehit.m_intersection);
