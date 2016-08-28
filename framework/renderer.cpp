@@ -31,8 +31,13 @@ void Renderer::render()
       
       Pixel p(x,y);
       
+      glm::vec3 ray_origin = glm::vec3(m_scene.m_camera.GetTransformation_inv() * glm::vec4(0, 0, 0, 1)); //origin standartmäßig auf 000
+      glm::vec3 ray_direction = glm::vec3(m_scene.m_camera.GetTransformation_inv() *
+                                glm::normalize(glm::vec4(width, height, distance, 0)));
 
-      Ray rayman {m_scene.m_camera.m_pos, glm::normalize(glm::vec3(width, height, distance))};
+      Ray rayman {ray_origin, ray_direction};
+
+
       //std::cout << rayman.direction.x << "  " << rayman.direction.y << "  " << rayman.direction.z<<"\n";
       auto tempcolor = raytrace(rayman);
       p.color.r= m_scene.m_A*pow(tempcolor.r, m_scene.m_gamma); //kontrastanpassung

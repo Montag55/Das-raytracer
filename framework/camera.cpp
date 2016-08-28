@@ -1,11 +1,11 @@
 #define _USE_MATH_DEFINES
 #include <cmath>
 #include "camera.hpp"
+#include <glm/glm.hpp>
 
 Camera::Camera():
-m_pos{glm::vec3{ 0, 0, 0 }},
-m_dir{glm::vec3{ 0, 0, -1 }},
-m_up{glm::vec3{ 0, 1, 0 }},
+transformation(glm::mat4()),
+transformation_inv(glm::mat4()),
 m_fov_x{45.0},
 m_name{"Default Camera"} {}
 
@@ -13,12 +13,22 @@ Camera::Camera(
     glm::vec3 const& position, glm::vec3 const& dir, glm::vec3 const& up,
     double fov_x, std::string const& name
 ):
-m_pos{position},
-m_dir{ 0, 0, -1 },
-m_up{up},
+transformation(glm::mat4()),
+transformation_inv(glm::mat4()),
 m_fov_x{fov_x},
 m_name{name} {}
 
+void Camera::translate(glm::vec3 const& transl) {
+    transformation = transformation *glm::translate(glm::mat4(), transl);
+    transformation_inv = transformation_inv *glm::translate(glm::mat4(), -transl);
+}
+
+void Camera::rotate(float angle, glm::vec3 const& axis) {
+   transformation = transformation * glm::rotate(glm::mat4(), angle, axis) ;
+   transformation_inv = transformation_inv * glm::rotate(glm::mat4(), -angle, axis);
+}
+
+/*
 Camera::Camera(Camera const& cam) :
 m_pos{ cam.m_pos },
 m_dir{ cam.m_dir },
@@ -27,7 +37,7 @@ m_fov_x{ cam.m_fov_x },
 m_name{cam.m_name} {}
 
 Camera::~Camera() {}
-
+*/
 /**
  * @brief  Creates a ray that has the camera position as origin. The direction
  * are determined by the passed arguments and the focal distance.

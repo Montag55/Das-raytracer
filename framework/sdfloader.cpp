@@ -240,17 +240,36 @@ Scene SDFLoader::load(std::string const& inpath)
                     ss >> scene.m_camera.m_name;
                     ss >> scene.m_camera.m_fov_x;
 
-                    ss >> scene.m_camera.m_pos.x;
-                    ss >> scene.m_camera.m_pos.y;
-                    ss >> scene.m_camera.m_pos.z;
-
-                    ss >> scene.m_camera.m_dir.x;
-                    ss >> scene.m_camera.m_dir.y;
-                    ss >> scene.m_camera.m_dir.z;
-
-                    ss >> scene.m_camera.m_up.x;
-                    ss >> scene.m_camera.m_up.y;
-                    ss >> scene.m_camera.m_up.z;
+                    if (!ss.eof()){
+                        glm::vec3 pos;
+                        ss >> pos.x;
+                        ss >> pos.y;
+                        ss >> pos.z;
+                        scene.m_camera.translate(pos);
+                        
+                        //direction
+                        if (!ss.eof()){
+                            glm::vec3 dir;
+                            ss >> dir.x;
+                            ss >> dir.y;
+                            ss >> dir.z;
+                            auto regularDir = glm::vec3(0.0f,0.0f,-1.0f);
+                            //winkel zwischen 0 0 -1 und dir
+                            float angleXY =glm::dot(regularDir,dir)/(glm::length(regularDir)*glm::length(dir));
+                            scene.m_camera.rotate(angleXY,glm::vec3(1,1,0));
+                            
+                            //up
+                            if (!ss.eof()){
+                                glm::vec3 up;
+                                ss >> up.x;
+                                ss >> up.y;
+                                ss >> up.z;
+                                auto regularUp = glm::vec3(0.0f,1.0f,0.0f);
+                                float angleZ =glm::dot(regularUp,up)/(glm::length(regularUp)*glm::length(up));
+                                scene.m_camera.rotate(angleZ,glm::vec3(0,0,1));
+                            }
+                        }
+                    }
                 }
             }
         }
