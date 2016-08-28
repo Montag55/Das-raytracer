@@ -12,10 +12,9 @@
 struct Camera {
     //Konstruktoren
     Camera();
-    Camera(glm::vec3 const& position, glm::vec3 const& dir, glm::vec3 const& up,
-             double fov_x, std::string const& name);
+    Camera(double fov_x, std::string const& name);
 
-    Camera(Camera const& cam);
+    //amera(Camera const& cam);
     //Destruktor
     ~Camera();
 
