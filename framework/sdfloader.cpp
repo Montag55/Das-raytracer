@@ -5,6 +5,9 @@
 #include <fstream>
 #include <sstream>
 #include <memory>
+#include "glm/ext.hpp"
+
+
 
 
 Scene SDFLoader::load(std::string const& inpath)
@@ -245,9 +248,11 @@ Scene SDFLoader::load(std::string const& inpath)
                         ss >> pos.x;
                         ss >> pos.y;
                         ss >> pos.z;
+
                         scene.m_camera.translate(pos);
                         
-                        //direction
+                        //direction 
+                        
                         if (!ss.eof()){
                             glm::vec3 dir;
                             ss >> dir.x;
@@ -257,6 +262,8 @@ Scene SDFLoader::load(std::string const& inpath)
                             //winkel zwischen 0 0 -1 und dir
                             float angleXY =glm::dot(regularDir,dir)/(glm::length(regularDir)*glm::length(dir));
                             scene.m_camera.rotate(angleXY,glm::vec3(1,1,0));
+
+                             std::cout<< "SDF:  " <<glm::to_string(scene.m_camera.GetTransformation())<<std::endl;
                             
                             //up
                             if (!ss.eof()){
@@ -268,8 +275,10 @@ Scene SDFLoader::load(std::string const& inpath)
                                 float angleZ =glm::dot(regularUp,up)/(glm::length(regularUp)*glm::length(up));
                                 scene.m_camera.rotate(angleZ,glm::vec3(0,0,1));
                             }
+                            
                         }
                     }
+                   
                 }
             }
         }

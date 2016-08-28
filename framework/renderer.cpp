@@ -1,5 +1,6 @@
 #include "renderer.hpp"
 #include <glm/glm.hpp>
+#include "glm/ext.hpp"
   
  /*Custom 1 
 ######################################
@@ -31,9 +32,15 @@ void Renderer::render()
       
       Pixel p(x,y);
       
+      
       glm::vec3 ray_origin = glm::vec3(m_scene.m_camera.GetTransformation_inv() * glm::vec4(0, 0, 0, 1)); //origin standartmäßig auf 000
+      std::cout<<glm::to_string(m_scene.m_camera.GetTransformation())<<std::endl;
+
+      std::cout << "Ursprung:     " << ray_origin.x<<"\n" << ray_origin.y<<"\n" << ray_origin.z<<"\n";
       glm::vec3 ray_direction = glm::vec3(m_scene.m_camera.GetTransformation_inv() *
                                 glm::normalize(glm::vec4(width, height, distance, 0)));
+      std::cout << "Richtung:     " << ray_direction.x<<"\n" << ray_direction.y<<"\n" << ray_direction.z<<"\n";
+
 
       Ray rayman {ray_origin, ray_direction};
 
