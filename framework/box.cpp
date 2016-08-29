@@ -74,6 +74,8 @@ Hit Box::intersect(Ray const& inray) const
     }
     else
         ray = inray;
+
+
     
     double t1 = (m_min.x - ray.origin.x)*ray.inv_direction.x;
     double t2 = (m_max.x - ray.origin.x)*ray.inv_direction.x;
@@ -129,18 +131,18 @@ Hit Box::intersect(Ray const& inray) const
 
         else if((boxhit.m_intersection.z) == Approx(m_min.z))
             {
-                boxhit.m_normal = glm::vec3{0, 0, 1};
+                boxhit.m_normal = glm::vec3{0, 0, -1};
             }
 
         else if((boxhit.m_intersection.z) == Approx(m_max.z))
             {
-                boxhit.m_normal = glm::vec3{0, 0, -1};
+                boxhit.m_normal = glm::vec3{0, 0, 1};
             }
 
         
         if (transf()){
 
-            boxhit.m_intersection = glm::vec3(glm::transpose(world_transformation())* glm::vec4(boxhit.m_intersection, 1));
+            boxhit.m_intersection = glm::vec3(world_transformation()* glm::vec4(boxhit.m_intersection, 1));
             boxhit.m_normal = glm::vec3(glm::mat3(world_transformation_inv_transp())* boxhit.m_normal);
         }
 

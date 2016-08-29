@@ -23,7 +23,7 @@ void Camera::translate(glm::vec3 const& transl) {
     transformation = transformation * glm::translate(glm::mat4(), transl);
     transformation_inv = transformation_inv *glm::translate(glm::mat4(), -transl);
 
-    std::cout<<glm::to_string(transformation)<<std::endl;
+    //std::cout<<glm::to_string(transformation)<<std::endl;
 }
 
 void Camera::rotate(float angle, glm::vec3 const& axis) {

@@ -34,22 +34,35 @@ void Renderer::render()
       
       
       glm::vec3 ray_origin = glm::vec3(m_scene.m_camera.GetTransformation_inv() * glm::vec4(0, 0, 0, 1)); //origin standartmäßig auf 000
-      std::cout<<glm::to_string(m_scene.m_camera.GetTransformation())<<std::endl;
+      //std::cout<<glm::to_string(m_scene.m_camera.GetTransformation())<<std::endl;
 
-      std::cout << "Ursprung:     " << ray_origin.x<<"\n" << ray_origin.y<<"\n" << ray_origin.z<<"\n";
+      //std::cout << "Ursprung:     " << ray_origin.x<<"\n" << ray_origin.y<<"\n" << ray_origin.z<<"\n";
       glm::vec3 ray_direction = glm::vec3(m_scene.m_camera.GetTransformation_inv() *
-                                glm::normalize(glm::vec4(width, height, distance, 0)));
-      std::cout << "Richtung:     " << ray_direction.x<<"\n" << ray_direction.y<<"\n" << ray_direction.z<<"\n";
+                                (glm::vec4(width, height, distance, 0)));
+      //std::cout << "Richtung:     " << ray_direction.x<<"\n" << ray_direction.y<<"\n" << ray_direction.z<<"\n";
 
 
       Ray rayman {ray_origin, ray_direction};
+      Color tempcolor;
 
+        int samples = 2;//sqrt(scene_.antialiase);
+        for (int xAA=0;xAA<samples+0;++xAA){
+          for (int yAA=0;yAA<samples+0;++yAA){
+            Ray aaRay;
+            aaRay.direction.x = rayman.direction.x +(float) (xAA)/(float)samples-0.5f; 
+            aaRay.direction.y = rayman.direction.y +(float) (yAA)/(float)samples-0.5f;
+            aaRay.direction.z = rayman.direction.z;
+            tempcolor +=raytrace(aaRay);
+          }
+        }
+
+          //ANTIALIAS: Hier noch echt hässlich, vllt nochmal überarbeiten!
 
       //std::cout << rayman.direction.x << "  " << rayman.direction.y << "  " << rayman.direction.z<<"\n";
-      auto tempcolor = raytrace(rayman);
-      p.color.r= m_scene.m_A*pow(tempcolor.r, m_scene.m_gamma); //kontrastanpassung
-      p.color.g= m_scene.m_A*pow(tempcolor.g, m_scene.m_gamma); //kontrastanpassung
-      p.color.b= m_scene.m_A*pow(tempcolor.b, m_scene.m_gamma); //kontrastanpassung
+      //tempcolor = raytrace(rayman);
+      p.color.r= m_scene.m_A*pow(tempcolor.r, m_scene.m_gamma)/4; //kontrastanpassung
+      p.color.g= m_scene.m_A*pow(tempcolor.g, m_scene.m_gamma)/4; //kontrastanpassung
+      p.color.b= m_scene.m_A*pow(tempcolor.b, m_scene.m_gamma)/4; //kontrastanpassung
       
 
       write(p);
@@ -150,7 +163,7 @@ Color Renderer::raytrace(Ray const& ray)
         }
         
         //glm::vec3 v = glm::normalize(light_origin); 
-        glm::vec3 v = glm::normalize(Hitze.m_intersection - ray.direction);
+        glm::vec3 v = glm::normalize(Hitze.m_intersection - glm::normalize(ray.direction));
         glm::vec3 r (glm::normalize(glm::reflect(raylight.direction, Hitze.m_normal)));
 
         float rv = (glm::dot(r, v));
