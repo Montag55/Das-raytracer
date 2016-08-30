@@ -45,7 +45,17 @@ void Renderer::render()
       Ray rayman {ray_origin, ray_direction};
       Color tempcolor;
 
-        int samples = 2;//sqrt(scene_.antialiase);
+      if (m_scene.m_antialiase>0)
+      {
+        tempcolor = render_antialiase(rayman, m_scene.m_antialiase);
+      }
+      else{
+        tempcolor = raytrace(rayman);
+      }
+
+
+        /*
+        int samples = sqrt(m_scene.m_antialiase);
         for (int xAA=0;xAA<samples+0;++xAA){
           for (int yAA=0;yAA<samples+0;++yAA){
             Ray aaRay;
@@ -55,14 +65,14 @@ void Renderer::render()
             tempcolor +=raytrace(aaRay);
           }
         }
+        */
 
           //ANTIALIAS: Hier noch echt hässlich, vllt nochmal überarbeiten!
-
       //std::cout << rayman.direction.x << "  " << rayman.direction.y << "  " << rayman.direction.z<<"\n";
       //tempcolor = raytrace(rayman);
-      p.color.r= m_scene.m_A*pow(tempcolor.r, m_scene.m_gamma)/4; //kontrastanpassung
-      p.color.g= m_scene.m_A*pow(tempcolor.g, m_scene.m_gamma)/4; //kontrastanpassung
-      p.color.b= m_scene.m_A*pow(tempcolor.b, m_scene.m_gamma)/4; //kontrastanpassung
+      p.color.r= m_scene.m_A*pow(tempcolor.r, m_scene.m_gamma); //kontrastanpassung
+      p.color.g= m_scene.m_A*pow(tempcolor.g, m_scene.m_gamma); //kontrastanpassung
+      p.color.b= m_scene.m_A*pow(tempcolor.b, m_scene.m_gamma); //kontrastanpassung
       
 
       write(p);
@@ -216,6 +226,27 @@ Hit Renderer::ohit(glm::mat4x4 const& trans_mat, Ray const& ray) const
   } 
   std::cout << ray.direction.z << "\n";
   return hit;
+}
+
+
+Color Renderer::render_antialiase(Ray rayman, float antialiase_faktor)
+{
+  Color tempcolor;
+  int samples = sqrt(antialiase_faktor);
+  for (int xAA=0;xAA<samples;++xAA){
+    for (int yAA=0;yAA<samples;++yAA){
+      Ray aaRay;
+      aaRay.direction.x = rayman.direction.x +(float) (xAA)/(float)samples-0.5f; 
+      aaRay.direction.y = rayman.direction.y +(float) (yAA)/(float)samples-0.5f;
+      aaRay.direction.z = rayman.direction.z;
+      tempcolor +=raytrace(aaRay);
+    }
+  }
+  tempcolor.r = tempcolor.r/antialiase_faktor;
+  tempcolor.g = tempcolor.g/antialiase_faktor;
+  tempcolor.b = tempcolor.b/antialiase_faktor;
+
+  return tempcolor;
 }
 
 /*ALTE ohit

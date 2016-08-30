@@ -4,6 +4,7 @@
 #include <algorithm>
 #include <iostream>
 #include <catch.hpp>
+#include <glm/ext.hpp>
 
 
 //Constructors
@@ -95,9 +96,6 @@ Hit Box::intersect(Ray const& inray) const
 
     if (tmax > std::max(0.0, tmin))
     {    
-        
-
-        
         //boxhit.m_intersection = glm::vec3{tmin*ray.direction.x, tmin*ray.direction.y, tmin*ray.direction.z};
         boxhit.m_intersection = glm::vec3{tmin*ray.direction.x + ray.origin.x, tmin*ray.direction.y + ray.origin.y, tmin*ray.direction.z + ray.origin.z};
 
@@ -143,6 +141,7 @@ Hit Box::intersect(Ray const& inray) const
         if (transf()){
 
             boxhit.m_intersection = glm::vec3(world_transformation()* glm::vec4(boxhit.m_intersection, 1));
+            std::cout<<glm::to_string(world_transformation_inv())<<std::endl;
             boxhit.m_normal = glm::vec3(glm::mat3(world_transformation_inv_transp())* boxhit.m_normal);
         }
 

@@ -111,7 +111,11 @@ Scene SDFLoader::load(std::string const& inpath)
                 {
                     ss >> scene.m_A;
                     ss >> scene.m_gamma;
-                }    
+                }
+                else if(firstWord == "antialiasing")
+                {
+                    ss >> scene.m_antialiase;
+                }   
                 else if(firstWord == "shape")//##############-Shape
                 {
                     ss>>firstWord;

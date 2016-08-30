@@ -25,6 +25,8 @@ struct Scene
 		std::map<std::string, std::shared_ptr<Material>> m_materials;
 		//Kamera
 		Camera m_camera;
+		//Antialias
+		int m_antialiase = 16;
 
 
 };
