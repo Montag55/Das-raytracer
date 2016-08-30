@@ -19,9 +19,11 @@ public:
   void write(Pixel const& p);
 
   Hit ohit(glm::mat4x4 const& trans_mat, Ray const& ray) const;
-  Color raytrace(Ray const& ray);
+  Color raytrace(Ray const& ray, unsigned int depth);
   Color render_antialiase(Ray rayman, float antialiase_faktor);
   Color tonemap(Color tempcolor);
+  void add_reflectedlight(Color & clr, Hit const& Hitze, Ray const& ray, unsigned int depth);
+
 
 
   inline std::vector<Color> const& colorbuffer() const

@@ -82,6 +82,7 @@ Scene SDFLoader::load(std::string const& inpath)
                     Color ka;
                     Color kd;
                     Color ks;
+                    float kr;
                     float faktor;
                     //-------------------
 
@@ -101,10 +102,12 @@ Scene SDFLoader::load(std::string const& inpath)
                     ss >> ks.g;
                     ss >> ks.b;
 
+                    ss >> kr;
+
                     ss >> faktor;
 
                     //Einspeichern
-                    std::shared_ptr<Material> material=std::make_shared<Material>(matname, ka, kd, ks, faktor);
+                    std::shared_ptr<Material> material=std::make_shared<Material>(matname, ka, kd, ks, kr, faktor);
                     scene.m_materials.insert(std::pair<std::string, std::shared_ptr<Material>>(matname, material));
                 }  
                 else if(firstWord == "tonemap")
@@ -183,15 +186,15 @@ Scene SDFLoader::load(std::string const& inpath)
                         
 
                         while (!ss.eof())
-                        {	
+                        {   
 
                             ss>>shapename;
                             
                             auto search = tmpcomp.find(shapename);
                             if(search != tmpcomp.end()) 
-                            {	
+                            {   
                                 
-                            	std::shared_ptr<Shape> tempshape = search->second;
+                                std::shared_ptr<Shape> tempshape = search->second;
                                 scene.m_composite->add(tempshape);
                             }   
                         
@@ -267,7 +270,7 @@ Scene SDFLoader::load(std::string const& inpath)
                             float angleXY =glm::dot(regularDir,dir)/(glm::length(regularDir)*glm::length(dir));
                             scene.m_camera.rotate(angleXY,glm::vec3(1,1,0));
 
-                             std::cout<< "SDF:  " <<glm::to_string(scene.m_camera.GetTransformation())<<std::endl;
+                             //std::cout<< "SDF:  " <<glm::to_string(scene.m_camera.GetTransformation())<<std::endl;
                             
                             //up
                             if (!ss.eof()){
@@ -286,11 +289,11 @@ Scene SDFLoader::load(std::string const& inpath)
                 }
             }
         }
-   		myfile.close();
-  	}
-  	else std::cout << "Unable to open file"; 
+        myfile.close();
+    }
+    else std::cout << "Unable to open file"; 
 
     scene.m_composite->set_name("Vadda123s");
-	return scene;
+    return scene;
 
 }

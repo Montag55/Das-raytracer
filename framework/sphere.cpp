@@ -73,15 +73,17 @@ Hit Sphere::intersect(Ray const& inray) const
     	else
     		ray = inray;
 
+    	ray.direction = glm::normalize(ray.direction);
+
 		spherehit.m_hit = glm::intersectRaySphere(ray.origin, ray.direction,
 			m_center, m_radius, spherehit.m_intersection, spherehit.m_normal);
 
-		std::cout<< "Spherehit at: " <<spherehit.m_intersection.x  << ", "
+		/*std::cout<< "Spherehit at: " <<spherehit.m_intersection.x  << ", "
 	    << spherehit.m_intersection.y  << ", "<< spherehit.m_intersection.z << "\n";
-	    
+	    */
         if (transf()){
 
-            spherehit.m_intersection = glm::vec3(world_transformation()* glm::vec4(spherehit.m_intersection, 1));
+            //spherehit.m_intersection = glm::vec3(world_transformation()* glm::vec4(spherehit.m_intersection, 1));
             spherehit.m_normal = glm::vec3(glm::mat3(world_transformation_inv_transp())* spherehit.m_normal);
         }
 

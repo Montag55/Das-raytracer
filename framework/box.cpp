@@ -104,7 +104,7 @@ Hit Box::intersect(Ray const& inray) const
         boxhit.m_shape = this;
         
 
-        std::cout<< "Boxhit min, box min: " << boxhit.m_intersection.z<< "   "<<m_min.z<< "\n";
+        //std::cout<< "Boxhit min, box min: " << boxhit.m_intersection.z<< "   "<<m_min.z<< "\n";
         
 
         if((boxhit.m_intersection.x) == Approx(m_min.x))
@@ -141,8 +141,8 @@ Hit Box::intersect(Ray const& inray) const
         if (transf()){
 
             boxhit.m_intersection = glm::vec3(world_transformation()* glm::vec4(boxhit.m_intersection, 1));
-            std::cout<<glm::to_string(world_transformation_inv())<<std::endl;
-            boxhit.m_normal = glm::vec3(glm::mat3(world_transformation_inv_transp())* boxhit.m_normal);
+            //std::cout<<glm::to_string(world_transformation_inv())<<std::endl;
+            boxhit.m_normal = glm::normalize(glm::vec3(glm::mat3(world_transformation_inv_transp())* boxhit.m_normal));
         }
 
         boxhit.m_distance = glm::length(boxhit.m_intersection-ray.origin);

@@ -17,7 +17,7 @@ void Renderer::render()
 {
   float distance = (-float(m_width))  / (2*tan(0.5*m_scene.m_camera.m_fov_x *M_PI / 180)); //krasser trigonometrischer kack zur Bestimmung der Bilddistanz // minus für neg. z Achse
   float samplePosY = (-float(m_height)/2); 
-  std::cout << "Distanz:     " << distance<<"\n";
+  //std::cout << "Distanz:     " << distance<<"\n";
 
   for (unsigned y = 0; y < m_height; ++y) {     //Horizontal
     float samplePosX = (-float(m_width)/2);
@@ -25,6 +25,7 @@ void Renderer::render()
       
       Pixel p(x,y);
       
+
       Ray rayman = m_scene.m_camera.calculate_eye_ray(samplePosX, samplePosY, distance);
       Color tempcolor;
 
@@ -33,7 +34,7 @@ void Renderer::render()
         tempcolor = render_antialiase(rayman, m_scene.m_antialiase);
       }
       else{
-        tempcolor = raytrace(rayman);
+        tempcolor = raytrace(rayman, 4);
       }
 
       p.color = tonemap(tempcolor); // tonemapping
@@ -65,7 +66,7 @@ void Renderer::write(Pixel const& p)
   
 }
 
-Color Renderer::raytrace(Ray const& ray)
+Color Renderer::raytrace(Ray const& ray, unsigned int depth)
 {  
   Hit Hitze = m_scene.m_composite->intersect(ray);
 
@@ -93,14 +94,14 @@ Color Renderer::raytrace(Ray const& ray)
 
       
       float distance= glm::length(Hitze.m_intersection-light->m_point); //distanz zwischen Licht und
-              std::cout << "Position:  "<< Hitze.m_intersection.x << "Position:  "<<Hitze.m_intersection.y << "Position:  "<<Hitze.m_intersection.z << "\n";
+              //std::cout << "Position:  "<< Hitze.m_intersection.x << "Position:  "<<Hitze.m_intersection.y << "Position:  "<<Hitze.m_intersection.z << "\n";
 
       if (ShadowObject.m_distance>distance) //Hier wird der Gegenstand direkt vom Licht getroffen.
       {
         
         float faktor=(glm::dot(light_direction, Hitze.m_normal));
-        std::cout << "Normale:  "<< Hitze.m_normal.x << "Normale:  "<< Hitze.m_normal.y<< "Normale:  " << Hitze.m_normal.z << "\n";
-        std::cout << "Faktor:  "<< faktor << "\n";
+        //std::cout << "Normale:  "<< Hitze.m_normal.x << "Normale:  "<< Hitze.m_normal.y<< "Normale:  " << Hitze.m_normal.z << "\n";
+        //std::cout << "Faktor:  "<< faktor << "\n";
         
         if (faktor<0)  // wenn der Winkel des Lichteinfall unterhalb der Oberfläche selbst liegt,
         {
@@ -112,7 +113,7 @@ Color Renderer::raytrace(Ray const& ray)
         glm::vec3 r (glm::normalize(glm::reflect(raylight.direction, Hitze.m_normal)));
 
         float rv = (glm::dot(r, v));
-        std::cout << "Faktor 2:  "<< rv << "   "<< v.x << "\n";
+        //std::cout << "Faktor 2:  "<< rv << "   "<< v.x << "\n";
         if(rv<0)
         {
           rv = 0;
@@ -122,9 +123,13 @@ Color Renderer::raytrace(Ray const& ray)
         
         clr+= light->m_color*((Hitze.m_shape->material()->kd * faktor)+
                               Hitze.m_shape->material()->ks* faktor2);
-      }  
+
+        if (depth>0)
+        {
+          add_reflectedlight(clr, Hitze, ray, depth);              //REFLECTION
+        }  
     // Hier kommt Reflekttion hin -> wie berechnet man Austrittswinkel aus normale?
-    
+      }
     }
     return clr;
     
@@ -134,18 +139,31 @@ Color Renderer::raytrace(Ray const& ray)
   return clr;   
 }   
 
+//Colors und Spiegelungen
+
+void Renderer::add_reflectedlight(Color & clr, Hit const& Hitze, Ray const& ray, unsigned int depth)
+{
+  std::cout << "Reflektioooon!" << "\n";
+  glm::vec3 direct=glm::normalize(glm::reflect(ray.direction, Hitze.m_normal));
+  Ray rayrefly{Hitze.m_intersection+(direct*0.001f), direct};  
+  
+  Color refColor = raytrace(rayrefly, depth-1);   // Ebene tiefer bitte!
+  clr += (refColor) * (Hitze.m_shape->material()->ks) * (Hitze.m_shape->material()->kr);
+}
+
 
 Color Renderer::render_antialiase(Ray rayman, float antialiase_faktor)
 {
+  std::cout << "Antianti!" << "\n";
   Color tempcolor;
   int samples = sqrt(antialiase_faktor);
-  for (int xAA=0;xAA<samples;++xAA){
-    for (int yAA=0;yAA<samples;++yAA){
+  for (int xAA=1;xAA<samples+1;++xAA){
+    for (int yAA=1;yAA<samples+1;++yAA){
       Ray aaRay;
       aaRay.direction.x = rayman.direction.x +(float) (xAA)/(float)samples-0.5f; 
       aaRay.direction.y = rayman.direction.y +(float) (yAA)/(float)samples-0.5f;
       aaRay.direction.z = rayman.direction.z;
-      tempcolor +=raytrace(aaRay);
+      //tempcolor +=raytrace(aaRay);
     }
   }
   tempcolor.r = tempcolor.r/antialiase_faktor;

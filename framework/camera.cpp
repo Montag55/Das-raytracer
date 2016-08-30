@@ -19,7 +19,7 @@ m_fov_x{fov_x},
 m_name{name} {}
 
 void Camera::translate(glm::vec3 const& transl) {
-    std::cout << "translating: ("<< transl.x<<","<<transl.y<<","<<transl.z<<")"<<std::endl;
+    //std::cout << "translating: ("<< transl.x<<","<<transl.y<<","<<transl.z<<")"<<std::endl;
     transformation = transformation * glm::translate(glm::mat4(), transl);
     transformation_inv = transformation_inv *glm::translate(glm::mat4(), -transl);
 
