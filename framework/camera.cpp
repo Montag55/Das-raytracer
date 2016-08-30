@@ -31,6 +31,19 @@ void Camera::rotate(float angle, glm::vec3 const& axis) {
    transformation_inv = transformation_inv * glm::rotate(glm::mat4(), -angle, axis);
 }
 
+Ray Camera::calculate_eye_ray(int x,int y, float distance)
+{   
+    Ray rayman;
+    rayman.origin = glm::vec3(transformation_inv*glm::vec4(0, 0, 0, 1));
+    rayman.direction = glm::vec3(transformation_inv *
+                                (glm::vec4(x, y, distance, 0)));
+
+    //std::cout << "Ursprung:     " << rayman.origin.x<<"\n" << rayman.origin.y<<"\n" << rayman.origin.z<<"\n";
+//std::cout << "Richtung:     " << rayman.direction.x<<"\n" << rayman.direction.y<<"\n" << rayman.direction.z<<"\n";
+
+    return rayman;
+}
+
 Camera::~Camera() {}
 
 /*

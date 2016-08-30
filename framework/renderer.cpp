@@ -1,12 +1,8 @@
 #include "renderer.hpp"
 #include <glm/glm.hpp>
 #include "glm/ext.hpp"
-  
- /*Custom 1 
-######################################
-Setzt Renderer Custom mit gewünschter
-Szene, Resolution und Output auf. 
-Nun kann gerendert werden */
+
+
 Renderer::Renderer(Scene const& scene, unsigned int width, unsigned int height, std::string const& ofile): 
   m_scene(scene),
   m_width(width), 
@@ -16,36 +12,23 @@ Renderer::Renderer(Scene const& scene, unsigned int width, unsigned int height, 
   m_ppm(m_width, m_height)
   {}
 
- /*Fkt: renderer
-######################################
-Organisiert die Pixel Farbgebung! */
+
 void Renderer::render()
 {
   float distance = (-float(m_width))  / (2*tan(0.5*m_scene.m_camera.m_fov_x *M_PI / 180)); //krasser trigonometrischer kack zur Bestimmung der Bilddistanz // minus für neg. z Achse
-  float height = (-float(m_height)/2); 
+  float samplePosY = (-float(m_height)/2); 
   std::cout << "Distanz:     " << distance<<"\n";
 
   for (unsigned y = 0; y < m_height; ++y) {     //Horizontal
-    float width = (-float(m_width)/2);
-    for (unsigned x = 0; x < m_width; ++x) {  
-      //Vertikal
+    float samplePosX = (-float(m_width)/2);
+    for (unsigned x = 0; x < m_width; ++x) {  //Vertikal
       
       Pixel p(x,y);
       
-      
-      glm::vec3 ray_origin = glm::vec3(m_scene.m_camera.GetTransformation_inv() * glm::vec4(0, 0, 0, 1)); //origin standartmäßig auf 000
-      //std::cout<<glm::to_string(m_scene.m_camera.GetTransformation())<<std::endl;
-
-      //std::cout << "Ursprung:     " << ray_origin.x<<"\n" << ray_origin.y<<"\n" << ray_origin.z<<"\n";
-      glm::vec3 ray_direction = glm::vec3(m_scene.m_camera.GetTransformation_inv() *
-                                (glm::vec4(width, height, distance, 0)));
-      //std::cout << "Richtung:     " << ray_direction.x<<"\n" << ray_direction.y<<"\n" << ray_direction.z<<"\n";
-
-
-      Ray rayman {ray_origin, ray_direction};
+      Ray rayman = m_scene.m_camera.calculate_eye_ray(samplePosX, samplePosY, distance);
       Color tempcolor;
 
-      if (m_scene.m_antialiase>0)
+      if (m_scene.m_antialiase>0) //antialiasing
       {
         tempcolor = render_antialiase(rayman, m_scene.m_antialiase);
       }
@@ -53,65 +36,21 @@ void Renderer::render()
         tempcolor = raytrace(rayman);
       }
 
-
-        /*
-        int samples = sqrt(m_scene.m_antialiase);
-        for (int xAA=0;xAA<samples+0;++xAA){
-          for (int yAA=0;yAA<samples+0;++yAA){
-            Ray aaRay;
-            aaRay.direction.x = rayman.direction.x +(float) (xAA)/(float)samples-0.5f; 
-            aaRay.direction.y = rayman.direction.y +(float) (yAA)/(float)samples-0.5f;
-            aaRay.direction.z = rayman.direction.z;
-            tempcolor +=raytrace(aaRay);
-          }
-        }
-        */
-
-          //ANTIALIAS: Hier noch echt hässlich, vllt nochmal überarbeiten!
-      //std::cout << rayman.direction.x << "  " << rayman.direction.y << "  " << rayman.direction.z<<"\n";
-      //tempcolor = raytrace(rayman);
-      p.color.r= m_scene.m_A*pow(tempcolor.r, m_scene.m_gamma); //kontrastanpassung
-      p.color.g= m_scene.m_A*pow(tempcolor.g, m_scene.m_gamma); //kontrastanpassung
-      p.color.b= m_scene.m_A*pow(tempcolor.b, m_scene.m_gamma); //kontrastanpassung
-      
+      p.color = tonemap(tempcolor); // tonemapping
 
       write(p);
 
-      width++;
+      samplePosX++;
      
     }
-    height++;
+    samplePosY++;
   }
   m_ppm.save(m_outfile);
 }
 
-/*void Renderer::render()
-{ 
-  const std::size_t checkersize = 20;
 
-  for (unsigned y = 0; y < m_height; ++y) {
-    for (unsigned x = 0; x < m_width; ++x) {
-      Pixel p(x,y);
-      if ( ((x/checkersize)%2) != ((y/checkersize)%2)) {
-        p.color = Color(0.0, 1.0, float(x)/m_height);
-      } else {
-        p.color = Color(1.0, 0.0, float(y)/m_width);
-      }
-
-      write(p);
-    }
-  }
-  m_ppm.save(m_outfile);
-  
-}*/
-
- /*Fkt: write
-######################################
-Schreibt einfach schön herum! */
 void Renderer::write(Pixel const& p)
 {
-  
-  // flip pixels, suck dick , because of opengl glDrawPixels
   size_t buf_pos = (m_width*p.y + p.x);
   if (buf_pos >= m_colorbuffer.size() || (int)buf_pos < 0) {
     std::cerr << "Fatal Error Renderer::write(Pixel p) : "
@@ -126,10 +65,6 @@ void Renderer::write(Pixel const& p)
   
 }
 
-
- /*Fkt: Raytrace
-######################################
-Ermittelt die Fabrbe! */
 Color Renderer::raytrace(Ray const& ray)
 {  
   Hit Hitze = m_scene.m_composite->intersect(ray);
@@ -200,35 +135,6 @@ Color Renderer::raytrace(Ray const& ray)
 }   
 
 
- /*Fkt: ohit
-######################################
-Gibt das durch einen Ray als erstes
-getroffene Objekt zurück! */
-
-
-
-  
-Hit Renderer::ohit(glm::mat4x4 const& trans_mat, Ray const& ray) const
-{ 
-
-  //Ray ray = transformRay(trans_mat, inray);
-
-  Hit hit;
-  Hit temphit;
-  for ( auto &i : m_scene.m_shapes )
-  {
-    temphit= i->intersect(ray);
-    if(temphit.m_distance<hit.m_distance)
-    {
-      hit =  temphit;  
-      std::cout<<"hit\n";
-    }
-  } 
-  std::cout << ray.direction.z << "\n";
-  return hit;
-}
-
-
 Color Renderer::render_antialiase(Ray rayman, float antialiase_faktor)
 {
   Color tempcolor;
@@ -249,21 +155,12 @@ Color Renderer::render_antialiase(Ray rayman, float antialiase_faktor)
   return tempcolor;
 }
 
-/*ALTE ohit
-Hit Renderer::ohit(Ray const& ray) const
+
+Color Renderer::tonemap(Color tempcolor)
 {
-  Hit hit;
-  Hit temphit;
-  for ( auto &i : m_scene.m_shapes )
-  {
-    temphit= i->intersect(ray);
-    if(temphit.m_distance<hit.m_distance)
-    {
-      hit =  temphit;  
-      std::cout<<"hit\n";
-    }
-  } 
-  std::cout << "hat er was nicht getroffen?" << "\n";
-  return hit;
+  Color p_color;
+  p_color.r= m_scene.m_A*pow(tempcolor.r, m_scene.m_gamma); //kontrastanpassung
+  p_color.g= m_scene.m_A*pow(tempcolor.g, m_scene.m_gamma); //kontrastanpassung
+  p_color.b= m_scene.m_A*pow(tempcolor.b, m_scene.m_gamma); //kontrastanpassung
+  return p_color;
 }
-*/

@@ -21,7 +21,7 @@ public:
   Hit ohit(glm::mat4x4 const& trans_mat, Ray const& ray) const;
   Color raytrace(Ray const& ray);
   Color render_antialiase(Ray rayman, float antialiase_faktor);
-
+  Color tonemap(Color tempcolor);
 
 
   inline std::vector<Color> const& colorbuffer() const

@@ -31,6 +31,7 @@ struct Camera {
         return transformation_inv;
     }
 
+    Ray calculate_eye_ray(int x,int y, float distance);
 
     /*Ray camera_ray(double x_coord, double y_coord) const;
     Camera& operator=(Camera const& tmp_cam);
