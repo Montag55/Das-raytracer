@@ -22,7 +22,7 @@ struct Material
 		ka(a),
 		kd(d),
 		ks(s),
-		kr(),
+		kr(r),
 		m(m_)
 		{}
 

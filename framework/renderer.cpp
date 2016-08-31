@@ -85,7 +85,7 @@ Color Renderer::raytrace(Ray const& ray, unsigned int depth)
 
       if (depth>0)
       {
-        reflectedlight(clr, Hitze,ray, depth);              //REFLECTION
+        reflectedlight(clr, Hitze, ray, depth);              //REFLECTION
       }
                                                                 //REFRACTION?
     return clr;   
@@ -142,8 +142,12 @@ void Renderer::reflectedlight(Color & clr, Hit const& Hitze, Ray const& ray, uns
   Ray rayrefly{Hitze.m_intersection+(direct*0.001f),direct};  
   
   Color refColor = raytrace(rayrefly, depth-1);
-  clr += (refColor) * (Hitze.m_shape->material()->ks) * (Hitze.m_shape->material()->kr);
+  //if(refColor.r<0.2f) std::cout << depth << " "<< Hitze.m_shape->material()->kr << " "<< refColor.b << " " << "\n";
+  clr = clr * (1.0f-Hitze.m_shape->material()->kr) + refColor * (Hitze.m_shape->material()->kr);
+  //clr += (refColor) * (Hitze.m_shape->material()->ks) * (Hitze.m_shape->material()->kr);
 }
+
+
 
 Color Renderer::render_antialiase(Ray rayman, float antialiase_faktor, unsigned int depth)
 {

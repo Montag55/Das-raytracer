@@ -112,7 +112,7 @@ Hit Box::intersect(Ray const& inray) const
             boxhit.m_normal = (glm::vec3(glm::mat3(world_transformation_inv_transp())* boxhit.m_normal));
         }
 
-        boxhit.m_distance = glm::length(boxhit.m_intersection-ray.origin);
+        boxhit.m_distance = tmin;//glm::length(boxhit.m_intersection-ray.origin);
     }    
    
 

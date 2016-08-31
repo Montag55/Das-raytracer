@@ -145,7 +145,7 @@ Scene SDFLoader::load(std::string const& inpath)
 
                         //Einspeichern
                         std::shared_ptr<Material> material=(scene.m_materials.find(materialname)->second);
-        
+                        std::cout << material->kr << "\n";
                         shape_pointer box= std::make_shared<Box>(boxname, material, min, max);
                         tmpcomp.insert(std::pair<std::string, shape_pointer>(box->name(), box));
                         
