@@ -74,7 +74,6 @@ Hit Sphere::intersect(Ray const& inray) const
     		ray = inray;
 
     	ray.direction = glm::normalize(ray.direction);
-
 		spherehit.m_hit = glm::intersectRaySphere(ray.origin, ray.direction,
 			m_center, m_radius, spherehit.m_intersection, spherehit.m_normal);
 
@@ -83,7 +82,7 @@ Hit Sphere::intersect(Ray const& inray) const
 	    */
         if (transf()){
 
-            //spherehit.m_intersection = glm::vec3(world_transformation()* glm::vec4(spherehit.m_intersection, 1));
+            spherehit.m_intersection = glm::vec3(world_transformation()* glm::vec4(spherehit.m_intersection, 1));
             spherehit.m_normal = glm::vec3(glm::mat3(world_transformation_inv_transp())* spherehit.m_normal);
         }
 

@@ -19,7 +19,7 @@ Shape::Shape():
         0, 0, 1, 0,
         0, 0, 0, 1}}
     {}
-    //{std::cout<< "Shape constructed" << "\n";}
+
 /*
 Shape::Shape(std::string const& name, Material const& mtrl):
     name_{name},
@@ -33,11 +33,11 @@ Shape::Shape(std::string const& name, Material const& mtrl):
                                            0, 0, 1, 0,
                                            0, 0, 0, 1}}
     {} 
-    //{std::cout<< "Shape constructed" << "\n";}
 */
+
 Shape::Shape(std::string const& name, std::shared_ptr<Material> mtrl):
     name_{name},
-    material_{mtrl}/*,
+    material_{mtrl},
     world_transformation_{glm::mat4x4 {1, 0, 0, 0,
                                       0, 1, 0, 0,
                                       0, 0, 1, 0,
@@ -45,13 +45,11 @@ Shape::Shape(std::string const& name, std::shared_ptr<Material> mtrl):
     world_transformation_inv_{glm::mat4x4 {1, 0, 0, 0,
                                           0, 1, 0, 0,
                                           0, 0, 1, 0,
-                                          0, 0, 0, 1}}*/
+                                          0, 0, 0, 1}}
 
     {} 
-    //{std::cout<< "Shape constructed" << "\n";}
 
 Shape::~Shape(){}
-//{std::cout<< "Shape destructed" << "\n";}
 
 
 std::ostream& Shape::print(std::ostream& os) const

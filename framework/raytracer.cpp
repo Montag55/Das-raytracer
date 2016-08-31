@@ -66,7 +66,7 @@
     while((entry = readdir(dir))!=nullptr)    //durch alle files
     {
         
-       if(has_suffix(entry->d_name, ".txt"))  // ".txt"?
+       if(has_suffix(entry->d_name, ".sdf"))  // ".txt"?
         { //Ablauf für eine SDF-Datei:
           std::cout << "<Datei: " << count << std::endl; 
           std::string filepath= std::string(m_in)+"/"+entry->d_name;
@@ -80,7 +80,8 @@
           std::cout << "-outputfile: " << outputfile<< std::endl;
 
           Renderer rendi(scene, m_width, m_height, outputfile); 
-          std::thread thr([&rendi]() { rendi.render(); });
+           rendi.render();
+          /*std::thread thr([&rendi]() { rendi.render(); });
         //folgendes nachher löschen, nur zur Ansicht schön..----------------
           Window win(glm::ivec2(m_width,m_height));
 
@@ -96,7 +97,7 @@
 
             win.update();
           }
-          thr.join();
+          thr.join();*/
         //-------------------------------------------------------------------
           count++;
         }

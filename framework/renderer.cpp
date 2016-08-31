@@ -31,7 +31,7 @@ void Renderer::render()
 
       if (m_scene.m_antialiase>0) //antialiasing
       {
-        tempcolor = render_antialiase(rayman, m_scene.m_antialiase);
+        tempcolor = render_antialiase(rayman, m_scene.m_antialiase, 4);
       }
       else{
         tempcolor = raytrace(rayman, 4);
@@ -67,103 +67,96 @@ void Renderer::write(Pixel const& p)
 }
 
 Color Renderer::raytrace(Ray const& ray, unsigned int depth)
-{  
-  Hit Hitze = m_scene.m_composite->intersect(ray);
-
-  
-  Color clr;
- 
- /* clr.r = Hitze.m_normal.x;
-  clr.g = Hitze.m_normal.y;   //Normalenüberprüfung :)
-  clr.b = Hitze.m_normal.z;
-
-  */
-
-  if(Hitze.m_hit==true) //Treffer?
   {
-    clr +=(m_scene.m_ambient*(Hitze.m_shape->material()->ka)); //default Licht
-    
-    for(auto& light : m_scene.m_lights) 
-    {
-      glm::vec3 light_direction=glm::normalize(light->m_point-Hitze.m_intersection);
-      glm::vec3 light_origin= Hitze.m_intersection+(light_direction)*0.001f; //Damit es sich nicht selbst trifft...
-      Ray raylight = Ray(light_origin,light_direction);
 
-      //Hit ShadowObject = ohit(transmat, raylight);
-      Hit ShadowObject = m_scene.m_composite->intersect(raylight);
-
-      
-      float distance= glm::length(Hitze.m_intersection-light->m_point); //distanz zwischen Licht und
-              //std::cout << "Position:  "<< Hitze.m_intersection.x << "Position:  "<<Hitze.m_intersection.y << "Position:  "<<Hitze.m_intersection.z << "\n";
-
-      if (ShadowObject.m_distance>distance) //Hier wird der Gegenstand direkt vom Licht getroffen.
+    Hit Hitze =m_scene.m_composite->intersect(ray); 
+     
+    if(Hitze.m_hit==true) //Treffer?
+    {  
+      Color clr;
+  
+      ambientlight(clr,Hitze.m_shape->material()->ka);      //AMBIENT
+            
+      //Überprüfe nun alle direkten Lichtwege
+      for(auto& light : m_scene.m_lights) 
       {
-        
-        float faktor=(glm::dot(light_direction, Hitze.m_normal));
-        //std::cout << "Normale:  "<< Hitze.m_normal.x << "Normale:  "<< Hitze.m_normal.y<< "Normale:  " << Hitze.m_normal.z << "\n";
-        //std::cout << "Faktor:  "<< faktor << "\n";
-        
-        if (faktor<0)  // wenn der Winkel des Lichteinfall unterhalb der Oberfläche selbst liegt,
-        {
-          faktor=0; // dann wird das Spatprodukt gleich null und es wird nichts zum Ambientlight addiert.
-        }
-        
-        //glm::vec3 v = glm::normalize(light_origin); 
-        glm::vec3 v = glm::normalize(Hitze.m_intersection - glm::normalize(ray.direction));
-        glm::vec3 r (glm::normalize(glm::reflect(raylight.direction, Hitze.m_normal)));
-
-        float rv = (glm::dot(r, v));
-        //std::cout << "Faktor 2:  "<< rv << "   "<< v.x << "\n";
-        if(rv<0)
-        {
-          rv = 0;
-        }
-
-        float faktor2 = (pow(rv, Hitze.m_shape->material()->m));
-        
-        clr+= light->m_color*((Hitze.m_shape->material()->kd * faktor)+
-                              Hitze.m_shape->material()->ks* faktor2);
-
-        if (depth>0)
-        {
-          add_reflectedlight(clr, Hitze, ray, depth);              //REFLECTION
-        }  
-    // Hier kommt Reflekttion hin -> wie berechnet man Austrittswinkel aus normale?
+        pointlight(clr, light, Hitze, ray);                      //DIFFUSE & SPECULAR 
       }
+
+      if (depth>0)
+      {
+        reflectedlight(clr, Hitze,ray, depth);              //REFLECTION
+      }
+                                                                //REFRACTION?
+    return clr;   
     }
-    return clr;
-    
-  }
-  clr+=m_scene.m_ambient;
-  
-  return clr;   
-}   
+  return m_scene.m_ambient; //Schuß ins nirgendswo!
+  } 
 
-//Colors und Spiegelungen
 
-void Renderer::add_reflectedlight(Color & clr, Hit const& Hitze, Ray const& ray, unsigned int depth)
+
+/*Hier werden die schönsten aller Lichter berechnet!*/
+void Renderer::ambientlight(Color & clr, Color const& ka)
 {
-  std::cout << "Reflektioooon!" << "\n";
-  glm::vec3 direct=glm::normalize(glm::reflect(ray.direction, Hitze.m_normal));
-  Ray rayrefly{Hitze.m_intersection+(direct*0.001f), direct};  
+  clr+=(m_scene.m_ambient)*(ka);  //+=I_a*k_a
+}
+
+void Renderer::pointlight(Color & clr, std::shared_ptr<Light> const& light, Hit const& Hitze, Ray const& ray)
+{
+        //glm::vec3 transformed_light_direction = glm::normalize(glm::vec3(Hitze.m_shape->world_transformation_inv()*
+          //                                   (glm::vec4 (light->m_point, 1)-glm::vec4(Hitze.m_intersection,1))));
+      
+        glm::vec3 direct=glm::normalize(light->m_point-Hitze.m_intersection);
+
+        Ray raylight
+        {
+          Hitze.m_intersection+(direct*0.001f), //nicht selbst Treffen
+          direct
+        };       
+
+        int distance= glm::length(Hitze.m_intersection-light->m_point);
+        Hit LightHitze = m_scene.m_composite->intersect(raylight);
+        
+        if (LightHitze.m_distance>distance) //Wir der Gegenstand vom Licht getroffen, oder ist ein Objekt dazwischen?
+        {
+          diffuselight(clr, Hitze, light, raylight);
+          specularlight(clr, Hitze, light, raylight, ray);
+        }//sonst ist da Schatten
+}
+/*->*/void Renderer::diffuselight(Color & clr, Hit const& Hitze, std::shared_ptr<Light> const& light,  Ray const& raylight)
+      {
+        float faktor=(glm::dot((Hitze.m_normal) , raylight.direction));
+        clr+= (light->m_color) * (Hitze.m_shape->material()->kd) * (std::max(faktor,0.0f));  
+      }
+
+/*->*/void Renderer::specularlight(Color & clr, Hit const& Hitze, std::shared_ptr<Light> const& light,  Ray const& raylight, Ray const& ray)
+      {
+        auto r = glm::normalize(glm::reflect(raylight.direction, Hitze.m_normal));
+        float cosb = std::max(0.0f, glm::dot(r, glm::normalize(ray.direction)));          //evtl hier nochmal mit transf. ray probieren!
+        clr+= light->m_color * Hitze.m_shape->material()->ks * pow(cosb, Hitze.m_shape->material()->m);
+      }
+
+void Renderer::reflectedlight(Color & clr, Hit const& Hitze, Ray const& ray, unsigned int depth)
+{
+  glm::vec3 direct=glm::normalize(glm::reflect(ray.direction,Hitze.m_normal));
+  Ray rayrefly{Hitze.m_intersection+(direct*0.001f),direct};  
   
-  Color refColor = raytrace(rayrefly, depth-1);   // Ebene tiefer bitte!
+  Color refColor = raytrace(rayrefly, depth-1);
   clr += (refColor) * (Hitze.m_shape->material()->ks) * (Hitze.m_shape->material()->kr);
 }
 
-
-Color Renderer::render_antialiase(Ray rayman, float antialiase_faktor)
+Color Renderer::render_antialiase(Ray rayman, float antialiase_faktor, unsigned int depth)
 {
-  std::cout << "Antianti!" << "\n";
   Color tempcolor;
   int samples = sqrt(antialiase_faktor);
+  --depth;
   for (int xAA=1;xAA<samples+1;++xAA){
     for (int yAA=1;yAA<samples+1;++yAA){
       Ray aaRay;
       aaRay.direction.x = rayman.direction.x +(float) (xAA)/(float)samples-0.5f; 
       aaRay.direction.y = rayman.direction.y +(float) (yAA)/(float)samples-0.5f;
       aaRay.direction.z = rayman.direction.z;
-      //tempcolor +=raytrace(aaRay);
+      tempcolor +=raytrace(aaRay, depth);
     }
   }
   tempcolor.r = tempcolor.r/antialiase_faktor;

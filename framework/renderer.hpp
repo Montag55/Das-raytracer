@@ -20,11 +20,13 @@ public:
 
   Hit ohit(glm::mat4x4 const& trans_mat, Ray const& ray) const;
   Color raytrace(Ray const& ray, unsigned int depth);
-  Color render_antialiase(Ray rayman, float antialiase_faktor);
+  Color render_antialiase(Ray rayman, float antialiase_faktor, unsigned int depth);
   Color tonemap(Color tempcolor);
-  void add_reflectedlight(Color & clr, Hit const& Hitze, Ray const& ray, unsigned int depth);
-
-
+  void reflectedlight(Color & clr, Hit const& Hitze, Ray const& ray, unsigned int depth);
+  void ambientlight(Color & clr, Color const& ka);
+  void pointlight(Color & clr, std::shared_ptr<Light> const& light, Hit const& Hitze, Ray const& ray);
+  void diffuselight(Color & clr, Hit const& Hitze, std::shared_ptr<Light> const& light,  Ray const& raylight);
+  void specularlight(Color & clr, Hit const& Hitze, std::shared_ptr<Light> const& light,  Ray const& raylight, Ray const& ray);
 
   inline std::vector<Color> const& colorbuffer() const
   {
