@@ -31,10 +31,10 @@ void Renderer::render()
 
       if (m_scene.m_antialiase>0) //antialiasing
       {
-        tempcolor = render_antialiase(rayman, m_scene.m_antialiase, 4);
+        tempcolor = render_antialiase(rayman, m_scene.m_antialiase, 3);
       }
       else{
-        tempcolor = raytrace(rayman, 4);
+        tempcolor = raytrace(rayman, 3);
       }
 
       p.color = tonemap(tempcolor); // tonemapping
