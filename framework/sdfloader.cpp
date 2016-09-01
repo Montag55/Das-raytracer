@@ -83,6 +83,7 @@ Scene SDFLoader::load(std::string const& inpath)
                     Color kd;
                     Color ks;
                     float kr;
+                    float opac;
                     float faktor;
                     //-------------------
 
@@ -103,11 +104,12 @@ Scene SDFLoader::load(std::string const& inpath)
                     ss >> ks.b;
 
                     ss >> kr;
+                    ss >> opac;
 
                     ss >> faktor;
 
                     //Einspeichern
-                    std::shared_ptr<Material> material=std::make_shared<Material>(matname, ka, kd, ks, kr, faktor);
+                    std::shared_ptr<Material> material=std::make_shared<Material>(matname, ka, kd, ks, kr, opac, faktor);
                     scene.m_materials.insert(std::pair<std::string, std::shared_ptr<Material>>(matname, material));
                 }  
                 else if(firstWord == "tonemap")

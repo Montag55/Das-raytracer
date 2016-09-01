@@ -13,16 +13,18 @@ struct Material
 		kd(),
 		ks(),
 		kr(),
+		opac(),
 		m(1.0f)
 		{}
 
 	Material(std::string const& n, Color const& a, Color const& d,
-				Color const& s, float r, float m_):
+				Color const& s, float r, float o, float m_):
 		name{n},
 		ka(a),
 		kd(d),
 		ks(s),
 		kr(r),
+		opac(o),
 		m(m_)
 		{}
 
@@ -45,6 +47,7 @@ struct Material
 	Color kd;
 	Color ks;
 	float kr;
+	float opac;
 	float m;
 };
 

@@ -86,7 +86,10 @@ Color Renderer::raytrace(Ray const& ray, unsigned int depth)
       if (depth>0)
       {
         reflectedlight(clr, Hitze, ray, depth);              //REFLECTION
+        refractedlight(clr, Hitze, ray, depth);
       }
+
+
                                                                 //REFRACTION?
     return clr;   
     }
@@ -139,12 +142,25 @@ void Renderer::pointlight(Color & clr, std::shared_ptr<Light> const& light, Hit 
 void Renderer::reflectedlight(Color & clr, Hit const& Hitze, Ray const& ray, unsigned int depth)
 {
   glm::vec3 direct=glm::normalize(glm::reflect(ray.direction,Hitze.m_normal));
-  Ray rayrefly{Hitze.m_intersection+(direct*0.001f),direct};  
+  Ray refl_ray{Hitze.m_intersection+(direct*0.001f),direct};  
   
-  Color refColor = raytrace(rayrefly, depth-1);
-  //if(refColor.r<0.2f) std::cout << depth << " "<< Hitze.m_shape->material()->kr << " "<< refColor.b << " " << "\n";
-  clr = clr * (1.0f-Hitze.m_shape->material()->kr) + refColor * (Hitze.m_shape->material()->kr);
+  Color refl_Color = raytrace(refl_ray, depth-1);
+  //if(reflColor.r<0.2f) std::cout << depth << " "<< Hitze.m_shape->material()->kr << " "<< refColor.b << " " << "\n";
+  clr = clr * (1.0f-Hitze.m_shape->material()->kr) + refl_Color * (Hitze.m_shape->material()->kr);
   //clr += (refColor) * (Hitze.m_shape->material()->ks) * (Hitze.m_shape->material()->kr);
+}
+
+void Renderer::refractedlight(Color & clr, Hit const& Hitze, Ray const& ray, unsigned int depth)
+{
+  glm::vec3 direct=glm::normalize(glm::refract(ray.direction,Hitze.m_normal, Hitze.m_shape->material()->opac));
+  Ray refr_ray{Hitze.m_intersection+(direct*0.001f),direct}; 
+
+  Color refr_Color = raytrace(refr_ray, depth-1);
+
+  clr = clr * (1.0f-Hitze.m_shape->material()->opac) + refr_Color * (Hitze.m_shape->material()->opac);
+ // clr += refr_Color * (1.0f-Hitze.m_shape->material()->opac);// + refr_Color * (Hitze.m_shape->material()->opac);
+
+
 }
 
 

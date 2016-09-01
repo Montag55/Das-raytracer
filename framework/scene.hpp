@@ -26,7 +26,7 @@ struct Scene
 		//Kamera
 		Camera m_camera;
 		//Antialias
-		int m_antialiase = 4;
+		int m_antialiase = 0;
 		//Reflection Depth
 		unsigned int m_depth = 2;
 

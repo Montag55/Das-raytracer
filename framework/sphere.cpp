@@ -4,6 +4,7 @@
 #include <glm/vec3.hpp>
 #include <cmath>
 #include "hit.hpp"
+#include <glm/glm.hpp>
 #define _USE_MATH_DEFINES
 
 
@@ -82,8 +83,11 @@ Hit Sphere::intersect(Ray const& inray) const
 	    */
         if (transf()){
 
-            spherehit.m_intersection = glm::vec3(world_transformation()* glm::vec4(spherehit.m_intersection, 1));
-            spherehit.m_normal = glm::vec3(glm::mat3(world_transformation_inv_transp())* spherehit.m_normal);
+            //spherehit.m_intersection = glm::vec3(world_transformation()* glm::vec4(spherehit.m_intersection, 1));
+            spherehit.m_normal = glm::vec3(glm::mat3(world_transformation_inv_transp())* spherehit.m_normal);    
+        }
+        if (glm::distance(spherehit.m_intersection-0.001f*ray.direction, m_center) < m_radius){
+        	spherehit.m_normal = -spherehit.m_normal;
         }
 
 		if (spherehit.m_hit)
